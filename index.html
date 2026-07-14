@@ -48,10 +48,10 @@
         .photo-container img { max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: contain; }
 
         /* Tabela e Assinaturas */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
         th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #64748b; border: 1px solid #e2e8f0; text-transform: uppercase; }
-        td { border: 1px solid #e2e8f0; padding: 0; }
-        td input { border: none; border-radius: 0; background: transparent; padding: 12px; margin: 0; box-shadow: none; }
+        td { border: 1px solid #e2e8f0; padding: 0; overflow: hidden; text-overflow: ellipsis; }
+        td input { border: none; border-radius: 0; background: transparent; padding: 12px; margin: 0; box-shadow: none; width: 100%; }
         td input:focus { box-shadow: inset 0 0 0 2px #8e7d67; }
         .total-row { background: #f8fafc; font-weight: bold; }
         .total-row td { padding: 12px; border: 1px solid #e2e8f0; }
@@ -72,7 +72,7 @@
         /* ================= MODO DE IMPRESSÃO (PDF) ================= */
         @media print {
             body { background: white; padding: 0; margin: 0; }
-            .container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; overflow: hidden; }
             
             .stepper, .nav-buttons, .toolbar, .no-print, #btn-remover-foto { display: none !important; }
             .step-content { display: block !important; opacity: 1 !important; transform: none !important; }
@@ -90,8 +90,12 @@
             .canvas-wrapper, .photo-wrapper { width: 48%; min-width: auto; flex: none; }
             .canvas-container, .photo-container { border: none; box-shadow: none; display: flex !important; }
             
-            table, th, td { border: 1px solid #000; }
-            td input { font-size: 12px; }
+            /* Correção do Corte da Tabela no PDF */
+            table { width: 100% !important; table-layout: fixed; }
+            table, th, td { border: 1px solid #000 !important; word-break: break-word; }
+            td input { font-size: 12px; padding: 6px !important; width: 100% !important; box-sizing: border-box; }
+            .total-row td { border: 1px solid #000 !important; }
+
             .sig-canvas-container { border: none; border-bottom: 1px solid #000; border-radius: 0; }
         }
     </style>
