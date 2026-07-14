@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ficha Clínica e Mapeamento</title>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
+        body { background-color: #f8f9fa; color: #1e293b; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .container { background: white; padding: 30px 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 900px; margin-bottom: 30px; }
+        
+        /* Cabeçalho da Clínica */
+        .clinic-header { text-align: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; margin-bottom: 30px; }
+        .clinic-header h1 { margin: 0; font-size: 22px; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
+        .clinic-header p { margin: 5px 0 0 0; font-size: 13px; color: #64748b; }
+        .clinic-header h2 { margin: 15px 0 0 0; font-size: 18px; color: #334155; }
+
+        /* Títulos de Seção */
+        .section-title { font-size: 14px; font-weight: 700; color: #8e7d67; text-transform: uppercase; margin: 30px 0 15px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
+
+        /* Grid de Formulário */
+        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; }
+        .form-group.full { width: 100%; flex: none; }
+        
+        label { font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 5px; }
+        input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select, textarea { 
+            padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; background: #f8fafc; color: #1e293b; width: 100%; transition: border 0.2s;
+        }
+        textarea { resize: vertical; min-height: 60px; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #8e7d67; background: #fff; }
+
+        /* Checkboxes e Radios */
+        .radio-group { display: flex; gap: 20px; align-items: center; padding: 10px 0; }
+        .radio-item { display: flex; align-items: center; gap: 5px; font-size: 14px; cursor: pointer; }
+
+        /* Planejamento Inicial (Mapa) */
+        .toolbar { background: #f1f5f9; padding: 15px; border-radius: 12px; display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+        .canvas-container { position: relative; background: white; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; width: 100%; aspect-ratio: 3 / 4; max-height: 600px; margin: 0 auto; }
+        .face-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0.4; pointer-events: none; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
+
+        /* Tabela de Planejamento Final */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #f8fafc; text-align: left; padding: 10px; font-size: 12px; color: #64748b; border: 1px solid #e2e8f0; }
+        td { border: 1px solid #e2e8f0; padding: 0; }
+        td input { border: none; border-radius: 0; background: transparent; padding: 10px; margin: 0; }
+        td input:focus { box-shadow: inset 0 0 0 2px #8e7d67; }
+
+        /* Assinatura */
+        .signature-wrapper { margin-top: 40px; text-align: center; page-break-inside: avoid; }
+        .sig-canvas-container { border: 2px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; height: 150px; position: relative; margin-bottom: 10px; }
+        .sig-canvas-container canvas { width: 100%; height: 100%; }
+        
+        /* Botões */
+        .btn { padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-primary { background-color: #8e7d67; color: white; }
+        .btn-primary:hover { background-color: #766754; }
+        .btn-secondary { background-color: #e2e8f0; color: #475569; }
+        .action-bar { display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px; }
+
+        /* ================= IMPRESSÃO / PDF ================= */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; }
+            .no-print { display: none !important; }
+            
+            /* Remove bordas de todos os inputs para parecer texto impresso */
+            input[type="text"], input[type="tel"], input[type="email"], input[type="date"], textarea, select {
+                border: none; background: transparent; padding: 0; font-size: 13px; color: #000; resize: none; appearance: none; -webkit-appearance: none;
+            }
+            /* Ajuste de espaçamento na impressão */
+            .form-group { border-bottom: 1px dotted #cbd5e1; padding-bottom: 2px; margin-bottom: 10px; }
+            .radio-group { padding: 0; }
+            
+            /* Tabela e Mapa na impressão */
+            .canvas-container { border: none; }
+            table, th, td { border: 1px solid #000; }
+            td input { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Cabeçalho Oficial -->
+    <div class="clinic-header">
+        <h1>Dr. Phelipe Aquino</h1>
+        <p>Biomédico Esteta - CRBM 39219 | Av. Paulista, 2202 - São Paulo</p>
+        <h2>Ficha de Anamnese e Planejamento Clínico</h2>
+    </div>
+
+    <!-- 1. DADOS PESSOAIS -->
+    <div class="section-title">Dados Pessoais</div>
+    <div class="form-row">
+        <div class="form-group" style="flex: 2;"><label>Nome Completo:</label><input type="text" id="nome"></div>
+        <div class="form-group"><label>Data de Nasc.:</label><input type="date" id="dn"></div>
+        <div class="form-group"><label>CPF:</label><input type="tel" id="cpf" placeholder="000.000.000-00"></div>
+    </div>
+    <div class="form-row">
+        <div class="form-group"><label>Celular (WhatsApp):</label><input type="tel" id="cel" placeholder="(11) 90000-0000"></div>
+        <div class="form-group"><label>E-mail:</label><input type="email" id="email"></div>
+        <div class="form-group"><label>Instagram:</label><input type="text" id="insta" placeholder="@"></div>
+    </div>
+    <div class="form-row">
+        <div class="form-group"><label>CEP:</label><input type="tel" id="cep"></div>
+        <div class="form-group" style="flex: 3;"><label>Endereço:</label><input type="text" id="endereco"></div>
+    </div>
+    <div class="form-row">
+        <div class="form-group"><label>Profissão:</label><input type="text" id="profissao"></div>
+        <div class="form-group"><label>Como conheceu a clínica?</label><input type="text" id="conheceu"></div>
+    </div>
+    <div class="form-group full">
+        <label>Já realizou algum procedimento estético facial?</label>
+        <input type="text" id="proc_anteriores" placeholder="Descreva quais e quando...">
+    </div>
+
+    <!-- 2. ANAMNESE INDIVIDUAL -->
+    <div class="section-title">Anamnese Individual</div>
+    <div class="form-group full">
+        <label>O que você gostaria de melhorar no seu rosto?</label>
+        <textarea id="melhorar" rows="2"></textarea>
+    </div>
+    <div class="form-group full">
+        <label>Possui histórico de alguma patologia crônica ou algum problema de saúde relevante?</label>
+        <input type="text" id="patologia">
+    </div>
+    <div class="form-group full">
+        <label>Faz uso de algum medicamento? Qual?</label>
+        <input type="text" id="medicamento">
+    </div>
+    <div class="form-group full">
+        <label>Possui alergia ou hipersensibilidade a algum medicamento, alimento, picadas de insetos?</label>
+        <input type="text" id="alergia" placeholder="Qual?">
+    </div>
+
+    <div class="form-row">
+        <div class="form-group full">
+            <label>Já tomou algum tipo de anestesia em tratamento dentário?</label>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="anestesia" value="Sim"> Sim</label>
+                <label class="radio-item"><input type="radio" name="anestesia" value="Não"> Não</label>
+                <input type="text" id="anestesia_comp" placeholder="Houve alguma complicação?" style="margin-left: 15px; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label>É fumante?</label>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="fumante" value="Sim"> Sim</label>
+                <label class="radio-item"><input type="radio" name="fumante" value="Não"> Não</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Uso frequente de álcool?</label>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="alcool" value="Sim"> Sim</label>
+                <label class="radio-item"><input type="radio" name="alcool" value="Não"> Não</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Está ou pode estar grávida?</label>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="gravida" value="Sim"> Sim</label>
+                <label class="radio-item"><input type="radio" name="gravida" value="Não"> Não</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Amamentando?</label>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="amamentando" value="Sim"> Sim</label>
+                <label class="radio-item"><input type="radio" name="amamentando" value="Não"> Não</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. PLANEJAMENTO INICIAL (MAPA) -->
+    <div class="section-title">Planejamento Inicial (Mapeamento Digital)</div>
+    
+    <div class="toolbar no-print">
+        <div>
+            <label style="margin-right:10px;">Cor do Ponto:</label>
+            <select id="color-select" style="width: 200px; display: inline-block;">
+                <option value="#3b82f6">Toxina (Azul)</option>
+                <option value="#ec4899">Bioestimulador (Rosa)</option>
+                <option value="#10b981">Preenchedor (Verde)</option>
+            </select>
+        </div>
+        <button class="btn btn-secondary" onclick="clearMap()">Limpar Desenho</button>
+    </div>
+
+    <div class="canvas-container">
+        <!-- O arquivo rosto.png precisa estar salvo no seu GitHub -->
+        <img src="rosto.png" alt="Face Map" class="face-bg" onerror="this.style.display='none'">
+        <canvas id="mapCanvas"></canvas>
+    </div>
+
+    <!-- 4. PLANEJAMENTO FINAL (FINANCEIRO) -->
+    <div class="section-title">Planejamento Final</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Data</th>
+                <th style="width: 45%;">Procedimento Realizado</th>
+                <th style="width: 20%;">Total (R$)</th>
+                <th style="width: 20%;">Forma de PGTO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <!-- 5. ASSINATURA -->
+    <div class="signature-wrapper">
+        <div class="form-group no-print"><label>Assinatura do Paciente (Desenhe abaixo):</label></div>
+        <div class="sig-canvas-container">
+            <canvas id="sigCanvas"></canvas>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <div style="font-size: 14px; font-weight: bold; width: 60%; text-align: left; border-top: 1px solid #000; padding-top: 5px;">
+                Assinatura do(a) Paciente
+            </div>
+            <div style="font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                <strong>Data:</strong> <input type="date" id="data_assinatura" style="border: none; background: transparent; padding: 0; font-family: inherit;">
+            </div>
+        </div>
+        <button class="btn btn-secondary no-print" onclick="clearSig()" style="margin-top: 10px;">Refazer Assinatura</button>
+    </div>
+
+    <!-- BOTÕES FINAIS -->
+    <div class="action-bar no-print">
+        <button class="btn btn-primary" onclick="window.print()">Salvar Prontuário / PDF</button>
+    </div>
+
+</div>
+
+<script>
+    // Configura a data de hoje automaticamente no campo de assinatura
+    document.getElementById('data_assinatura').valueAsDate = new Date();
+
+    // =============== LÓGICA DO MAPA FACIAL ===============
+    const mapCanvas = document.getElementById('mapCanvas');
+    const mapCtx = mapCanvas.getContext('2d');
+    const mapContainer = document.querySelector('.canvas-container');
+
+    function resizeMap() {
+        mapCanvas.width = mapContainer.clientWidth;
+        mapCanvas.height = mapContainer.clientHeight;
+    }
+    window.addEventListener('load', resizeMap);
+    window.addEventListener('resize', resizeMap);
+    setTimeout(resizeMap, 100);
+
+    mapCanvas.addEventListener('click', function(e) {
+        const rect = mapCanvas.getBoundingClientRect();
+        const scaleX = mapCanvas.width / rect.width;
+        const scaleY = mapCanvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        
+        const color = document.getElementById('color-select').value;
+        const dose = prompt("Dose/Anotação:");
+        
+        if (dose !== null) {
+            mapCtx.beginPath(); mapCtx.arc(x, y, 6, 0, 2*Math.PI);
+            mapCtx.fillStyle = color; mapCtx.fill();
+            mapCtx.lineWidth = 2; mapCtx.strokeStyle = "#fff"; mapCtx.stroke();
+            if (dose) {
+                mapCtx.font = "bold 14px -apple-system, sans-serif";
+                mapCtx.fillStyle = "#1e293b"; mapCtx.shadowColor = "white"; mapCtx.shadowBlur = 4;
+                mapCtx.fillText(dose, x + 10, y + 5); mapCtx.shadowBlur = 0;
+            }
+        }
+    });
+
+    function clearMap() {
+        if(confirm("Apagar o desenho?")) mapCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+    }
+
+    // =============== LÓGICA DA ASSINATURA ===============
+    const sigCanvas = document.getElementById('sigCanvas');
+    const sigCtx = sigCanvas.getContext('2d');
+    
+    function resizeSig() {
+        const rect = sigCanvas.parentElement.getBoundingClientRect();
+        sigCanvas.width = rect.width;
+        sigCanvas.height = rect.height;
+    }
+    window.addEventListener('load', resizeSig);
+    window.addEventListener('resize', resizeSig);
+    setTimeout(resizeSig, 100);
+
+    let drawingSig = false;
+    sigCtx.lineWidth = 2; sigCtx.lineCap = 'round'; sigCtx.strokeStyle = '#0f172a';
+
+    sigCanvas.addEventListener('touchstart', e => { drawingSig = true; const p = getPos(sigCanvas, e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); e.preventDefault(); }, {passive:false});
+    sigCanvas.addEventListener('touchmove', e => { if(!drawingSig) return; const p = getPos(sigCanvas, e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); e.preventDefault(); }, {passive:false});
+    sigCanvas.addEventListener('touchend', () => drawingSig = false);
+    
+    // Suporte a mouse para testes no PC
+    sigCanvas.addEventListener('mousedown', e => { drawingSig = true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); });
+    sigCanvas.addEventListener('mousemove', e => { if(!drawingSig) return; sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); });
+    sigCanvas.addEventListener('mouseup', () => drawingSig = false);
+
+    function getPos(canvasDom, e) {
+        const rect = canvasDom.getBoundingClientRect();
+        const scaleX = canvasDom.width / rect.width;
+        const scaleY = canvasDom.height / rect.height;
+        return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+    }
+
+    function clearSig() { sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height); }
+
+</script>
+
+</body>
+</html>
