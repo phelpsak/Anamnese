@@ -172,13 +172,11 @@
             </div>
         </div>
 
-        <div class="nav-buttons" style="border-top: none;">
-            <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
-                <button class="btn btn-blue" onclick="enviarWhatsApp()">💬 WhatsApp + Imprimir</button>
-                <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
-            </div>
+        <div class="nav-buttons">
+            <div></div> 
+            <button class="btn btn-primary" onclick="goToStep(2)">Avançar: Planejamento Financeiro ➔</button>
         </div>
+    </div>
 
     <!-- ================= PASSO 2: FINANCEIRO (ORÇAMENTO) ================= -->
     <div class="step-content" id="step-2">
@@ -349,8 +347,10 @@
 
         <div class="nav-buttons" style="border-top: none;">
             <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
-            <!-- BOTÃO FINAL: Aciona envio pro Notion e abre tela de impressão -->
-            <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="btn btn-blue" onclick="enviarWhatsApp()">💬 WhatsApp + Imprimir</button>
+                <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
+            </div>
         </div>
     </div>
 
@@ -526,7 +526,7 @@
     });
 
     // --- INTEGRAÇÃO COM BANCO DE DADOS (NOTION VIA WEBHOOK) ---
-function enviarParaBanco() {
+    function enviarParaBanco() {
         const webhookUrl = "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa"; 
 
         const dadosPaciente = {
@@ -536,7 +536,6 @@ function enviarParaBanco() {
             data_atendimento: document.getElementById('data_prontuario').value
         };
 
-        // Alerta de carregamento
         alert("Enviando dados para o Notion... aguarde.");
 
         fetch(webhookUrl, {
@@ -557,6 +556,7 @@ function enviarParaBanco() {
             alert("❌ Falha na conexão: " + error.message);
         });
     }
+
     // --- GERAÇÃO DE MENSAGEM E ENVIO PARA WHATSAPP ---
     function enviarWhatsApp() {
         const nome = document.getElementById('client-name').value.trim() || "Paciente";
@@ -591,6 +591,7 @@ function enviarParaBanco() {
             window.print();
         }, 500);
     }
+
 </script>
 
 </body>
