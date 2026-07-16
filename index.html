@@ -136,7 +136,7 @@
             <div class="form-group"><label>CPF:</label><input type="tel" id="client-cpf" oninput="atualizarTermo()" placeholder="000.000.000-00"></div>
         </div>
         <div class="form-row">
-            <div class="form-group"><label>Celular (WhatsApp):</label><input type="tel" placeholder="(11) 90000-0000"></div>
+            <div class="form-group"><label>Celular (WhatsApp):</label><input type="tel" id="client-phone" placeholder="(11) 90000-0000"></div>
             <div class="form-group"><label>E-mail:</label><input type="email"></div>
             <div class="form-group"><label>Instagram:</label><input type="text" placeholder="@"></div>
         </div>
@@ -172,11 +172,13 @@
             </div>
         </div>
 
-        <div class="nav-buttons">
-            <div></div> 
-            <button class="btn btn-primary" onclick="goToStep(2)">Avançar: Planejamento Financeiro ➔</button>
+        <div class="nav-buttons" style="border-top: none;">
+            <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="btn btn-blue" onclick="enviarWhatsApp()">💬 WhatsApp + Imprimir</button>
+                <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
+            </div>
         </div>
-    </div>
 
     <!-- ================= PASSO 2: FINANCEIRO (ORÇAMENTO) ================= -->
     <div class="step-content" id="step-2">
@@ -554,6 +556,40 @@ function enviarParaBanco() {
         .catch(error => {
             alert("❌ Falha na conexão: " + error.message);
         });
+    }
+    // --- GERAÇÃO DE MENSAGEM E ENVIO PARA WHATSAPP ---
+    function enviarWhatsApp() {
+        const nome = document.getElementById('client-name').value.trim() || "Paciente";
+        let telefone = document.getElementById('client-phone').value.trim();
+        
+        // Limpa o número de telefone (remove parênteses, traços e espaços)
+        telefone = telefone.replace(/\D/g, '');
+        
+        // Verifica se tem DDD, se não tiver ou estiver vazio, avisa o usuário
+        if (telefone.length < 10) {
+            alert("Por favor, preencha o celular do paciente com DDD no Passo 1.");
+            return;
+        }
+        
+        // Adiciona o DDI do Brasil (55) se não estiver presente
+        if (!telefone.startsWith('55')) {
+            telefone = '55' + telefone;
+        }
+
+        // Criação da mensagem personalizada
+        const mensagem = `Olá, ${nome}! Aqui é da clínica do Dr. Phelipe Aquino (Av. Paulista, 2202).\n\nFoi um prazer receber você! Estou enviando em anexo o seu prontuário digital com o resumo do nosso planejamento clínico e os cuidados que conversamos.\n\nQualquer dúvida, estou à disposição!`;
+        
+        // Codifica o texto para o formato de URL
+        const textoCodificado = encodeURIComponent(mensagem);
+        
+        // Monta o link do WhatsApp e abre em nova aba
+        const linkWhatsapp = `https://wa.me/${telefone}?text=${textoCodificado}`;
+        window.open(linkWhatsapp, '_blank');
+        
+        // Aciona a tela de impressão para salvar o PDF
+        setTimeout(() => {
+            window.print();
+        }, 500);
     }
 </script>
 
