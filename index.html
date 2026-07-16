@@ -274,7 +274,7 @@
         </div>
 
         <div class="section-title">Registro Clínico de Execução</div>
-        
+        <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
         <div class="toolbar no-print">
             <div>
                 <label style="display:block; font-size:12px; font-weight:600; color:#94a3b8; margin-bottom:5px;">Produto / Legenda</label>
@@ -527,7 +527,42 @@
             initSignature(sigCanvasProntuario, sigCtxProntuario);
         }
     });
+// --- INTEGRAÇÃO COM BANCO DE DADOS (NOTION VIA WEBHOOK) ---
+    function enviarParaBanco() {
+        // 1. Cole aqui o link do Webhook gerado no Make.com ou Zapier
+        const webhookUrl = "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa"; 
 
+        if (webhookUrl === "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa") {
+            console.log("Link do Webhook não configurado. Os dados não foram enviados.");
+            return; // Interrompe se o link não foi colocado
+        }
+
+        // 2. Coletando os dados principais do paciente
+        const dadosPaciente = {
+            nome: document.getElementById('client-name').value.trim(),
+            cpf: document.getElementById('client-cpf').value.trim(),
+            valor_total: totalValor, // Variável que já calcula a soma na tabela
+            data_atendimento: document.getElementById('data_prontuario').value,
+            
+            // Coletando algumas respostas da anamnese (ajuste os seletores conforme precisar)
+            historico_saude: document.querySelector('input[placeholder="Houve complicação?"]').parentElement.previousElementSibling.previousElementSibling.value || "Não preenchido"
+        };
+
+        // 3. Enviando o pacote de dados, silenciosamente, para a automação
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dadosPaciente)
+        })
+        .then(response => {
+            console.log("Dados enviados para o banco de dados com sucesso!");
+        })
+        .catch(error => {
+            console.error("Erro ao enviar dados para o banco:", error);
+        });
+    }
 </script>
 
 </body>
