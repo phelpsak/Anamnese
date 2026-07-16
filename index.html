@@ -524,7 +524,7 @@
     });
 
     // --- INTEGRAÇÃO COM BANCO DE DADOS (NOTION VIA WEBHOOK) ---
-    function enviarParaBanco() {
+function enviarParaBanco() {
         const webhookUrl = "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa"; 
 
         const dadosPaciente = {
@@ -534,6 +534,9 @@
             data_atendimento: document.getElementById('data_prontuario').value
         };
 
+        // Alerta de carregamento
+        alert("Enviando dados para o Notion... aguarde.");
+
         fetch(webhookUrl, {
             method: 'POST',
             headers: {
@@ -542,13 +545,16 @@
             body: JSON.stringify(dadosPaciente)
         })
         .then(response => {
-            console.log("Dados enviados para o banco de dados com sucesso!");
+            if (response.ok) {
+                alert("✅ Sucesso! Os dados foram salvos no Notion.");
+            } else {
+                alert("⚠️ Erro de comunicação com o Make. Verifique a URL do Webhook.");
+            }
         })
         .catch(error => {
-            console.error("Erro ao enviar dados para o banco:", error);
+            alert("❌ Falha na conexão: " + error.message);
         });
     }
-
 </script>
 
 </body>
