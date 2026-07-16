@@ -119,12 +119,12 @@
         <p>Biomédico Esteta - CRBM 39219 | Av. Paulista, 2202 - São Paulo</p>
     </div>
 
-    <!-- Indicador Visual de Passos Atualizado -->
+    <!-- Indicador Visual de Passos -->
     <div class="stepper no-print">
         <div class="step-dot active" id="dot-1">1. Admissão</div>
         <div class="step-dot" id="dot-2">2. Orçamento</div>
         <div class="step-dot" id="dot-3">3. Consentimento</div>
-        <div class="step-dot" id="dot-4">4. Execução e Prontuário</div>
+        <div class="step-dot" id="dot-4">4. Prontuário Final</div>
     </div>
 
     <!-- ================= PASSO 1: INFORMAÇÕES E ANAMNESE ================= -->
@@ -241,7 +241,7 @@
             <!-- O texto gerado automaticamente entra aqui -->
         </div>
 
-        <!-- ASSINATURA DO TERMO (APENAS PACIENTE AQUI, ANTES DO PROCEDIMENTO) -->
+        <!-- ASSINATURA DO TERMO (APENAS PACIENTE AQUI) -->
         <div>
             <div class="signatures-grid">
                 <div class="sig-box" style="margin: 0 auto; max-width: 400px;">
@@ -274,7 +274,7 @@
         </div>
 
         <div class="section-title">Registro Clínico de Execução</div>
-        <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
+        
         <div class="toolbar no-print">
             <div>
                 <label style="display:block; font-size:12px; font-weight:600; color:#94a3b8; margin-bottom:5px;">Produto / Legenda</label>
@@ -330,7 +330,7 @@
                 <!-- Profissional -->
                 <div class="sig-box">
                     <div class="dr-sig-container">
-                        <!-- A sua assinatura é injetada aqui -->
+                        <!-- Imagem da assinatura do Doutor -->
                         <img src="assinatura.png" alt="Assinatura Dr." class="dr-sig-img" onerror="this.style.display='none'">
                     </div>
                     <div class="sig-line">
@@ -347,7 +347,8 @@
 
         <div class="nav-buttons" style="border-top: none;">
             <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
-            <button class="btn btn-primary" style="background-color: #0f172a;" onclick="window.print()">🖨️ Imprimir Prontuário Completo</button>
+            <!-- BOTÃO FINAL: Aciona envio pro Notion e abre tela de impressão -->
+            <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
         </div>
     </div>
 
@@ -368,7 +369,6 @@
             document.getElementById('dot-' + i).classList.add('active');
         }
 
-        // Inicializa/redimensiona os canvas na aba correta para evitar bugs
         if (step === 3) { 
             atualizarTermo(); 
             setTimeout(() => initSignature(sigCanvasTermo, sigCtxTermo), 50); 
@@ -402,23 +402,19 @@
     };
 
     function atualizarTermo() {
-        // Pega dados digitados no Passo 1
         const nome = document.getElementById('client-name').value.trim() || "NOME DO PACIENTE";
         const cpf = document.getElementById('client-cpf').value.trim() || "000.000.000-00";
         const tipoTermo = document.getElementById('termo-select').value;
         
-        // Atualiza dinamicamente as linhas de assinatura (Passo 3 e Passo 4)
         document.querySelectorAll('.dynamic-nome').forEach(el => el.innerText = nome.toUpperCase());
         document.querySelectorAll('.dynamic-cpf').forEach(el => el.innerText = cpf);
 
-        // Pega os procedimentos escritos na tabela
         let listaProcs = [];
         document.querySelectorAll('.proc-desc').forEach(input => {
             if(input.value.trim() !== '') listaProcs.push(input.value.trim());
         });
         let descProcs = listaProcs.length > 0 ? listaProcs.join(', ') : "Conforme descrito na tabela de orçamento";
 
-        // Monta o texto do Termo
         let textoFinal = `
             <p>Eu, <strong>${nome.toUpperCase()}</strong>, inscrito(a) no CPF sob o nº <strong>${cpf}</strong>, de forma livre e esclarecida, ${termsDB[tipoTermo]}</p>
             <p>Fui devidamente informado(a) sobre as indicações, contraindicações, riscos inerentes (como inchaço, vermelhidão e pequenos hematomas transitórios) e todos os cuidados pós-procedimento necessários para o sucesso do tratamento.</p>
@@ -519,7 +515,6 @@
 
     function clearSig(ctx, canvas) { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    // Inicia ouvintes de redimensionamento de janela
     window.addEventListener('resize', () => {
         if(document.getElementById('step-3').classList.contains('active')) initSignature(sigCanvasTermo, sigCtxTermo);
         if(document.getElementById('step-4').classList.contains('active')) {
@@ -527,28 +522,18 @@
             initSignature(sigCanvasProntuario, sigCtxProntuario);
         }
     });
-// --- INTEGRAÇÃO COM BANCO DE DADOS (NOTION VIA WEBHOOK) ---
+
+    // --- INTEGRAÇÃO COM BANCO DE DADOS (NOTION VIA WEBHOOK) ---
     function enviarParaBanco() {
-        // 1. Cole aqui o link do Webhook gerado no Make.com ou Zapier
         const webhookUrl = "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa"; 
 
-        if (webhookUrl === "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa") {
-            console.log("Link do Webhook não configurado. Os dados não foram enviados.");
-            return; // Interrompe se o link não foi colocado
-        }
-
-        // 2. Coletando os dados principais do paciente
         const dadosPaciente = {
             nome: document.getElementById('client-name').value.trim(),
             cpf: document.getElementById('client-cpf').value.trim(),
-            valor_total: totalValor, // Variável que já calcula a soma na tabela
-            data_atendimento: document.getElementById('data_prontuario').value,
-            
-            // Coletando algumas respostas da anamnese (ajuste os seletores conforme precisar)
-            historico_saude: document.querySelector('input[placeholder="Houve complicação?"]').parentElement.previousElementSibling.previousElementSibling.value || "Não preenchido"
+            valor_total: totalValor, 
+            data_atendimento: document.getElementById('data_prontuario').value
         };
 
-        // 3. Enviando o pacote de dados, silenciosamente, para a automação
         fetch(webhookUrl, {
             method: 'POST',
             headers: {
@@ -563,6 +548,7 @@
             console.error("Erro ao enviar dados para o banco:", error);
         });
     }
+
 </script>
 
 </body>
