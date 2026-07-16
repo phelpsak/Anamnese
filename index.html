@@ -47,7 +47,7 @@
         .photo-container { display: none; background: white; border-radius: 16px; padding: 10px; border: 2px dashed #cbd5e1; width: 100%; aspect-ratio: 3 / 4; align-items: center; justify-content: center; margin: 0 auto; }
         .photo-container img { max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: contain; }
 
-        /* Tabela e Assinaturas */
+        /* Tabela */
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
         th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #64748b; border: 1px solid #e2e8f0; text-transform: uppercase; }
         td { border: 1px solid #e2e8f0; padding: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -56,18 +56,22 @@
         .total-row { background: #f8fafc; font-weight: bold; }
         .total-row td { padding: 12px; border: 1px solid #e2e8f0; }
 
-        .signature-wrapper { margin-top: 20px; text-align: center; }
-        .sig-canvas-container { border: 2px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; height: 180px; position: relative; margin-bottom: 5px; }
+        /* Assinaturas Lado a Lado */
+        .signatures-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; }
+        .sig-box { flex: 1; min-width: 250px; text-align: center; }
+        
+        .sig-canvas-container { border: 2px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; height: 160px; position: relative; margin-bottom: 5px; }
         .sig-canvas { width: 100%; height: 100%; cursor: crosshair; }
         
-        /* Bloco de Identificação e Assinaturas Lado a Lado / Empilhadas */
-        .signatures-footer { display: flex; flex-direction: column; gap: 30px; margin-top: 15px; }
-        .sig-block { text-align: left; width: 100%; }
-        .sig-line { border-top: 1px solid #000; padding-top: 5px; font-size: 14px; font-weight: bold; color: #0f172a; }
-        .sig-subtext { font-size: 13px; color: #475569; margin-top: 2px; }
+        .dr-sig-container { height: 160px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px; margin-bottom: 5px; }
+        .dr-sig-img { max-height: 140px; max-width: 100%; object-fit: contain; }
         
-        /* Imagem da Sua Assinatura Profissional */
-        .pro-signature-img { max-height: 60px; width: auto; object-fit: contain; margin-bottom: -10px; display: block; }
+        .sig-line { border-top: 1.5px solid #1e293b; padding-top: 8px; font-size: 14px; line-height: 1.4; }
+        .sig-line strong { color: #0f172a; }
+        .sig-line span { font-size: 12px; color: #475569; }
+
+        .date-centered { text-align: center; margin-top: 25px; font-size: 14px; font-weight: bold; }
+        .date-centered input { display: inline-block; width: 120px; text-align: center; border: none; background: transparent; padding: 0; font-weight: bold; font-size: 14px; }
 
         /* Navegação e Botões */
         .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 2px solid #f1f5f9; }
@@ -83,13 +87,10 @@
             body { background: white; padding: 0; margin: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; overflow: hidden; }
             
-            .stepper, .nav-buttons, .toolbar, .no-print, #btn-remover-foto { display: none !important; }
+            .stepper, .nav-buttons, .toolbar, .no-print, #btn-remover-foto, .btn-limpar-sig { display: none !important; }
             .step-content { display: block !important; opacity: 1 !important; transform: none !important; }
             
-            /* QUEBRAS DE PÁGINA PERFEITAS PARA AS 4 ETAPAS */
-            #step-2 { page-break-before: always; padding-top: 20px; }
-            #step-3 { page-break-before: always; padding-top: 20px; }
-            #step-4 { page-break-before: always; padding-top: 20px; }
+            #step-2, #step-3, #step-4 { page-break-before: always; padding-top: 20px; }
 
             input, textarea, select { border: none; background: transparent; padding: 0; font-size: 13px; color: #000; resize: none; -webkit-appearance: none; }
             .form-group { border-bottom: 1px dotted #cbd5e1; padding-bottom: 4px; margin-bottom: 12px; }
@@ -104,11 +105,8 @@
             td input { font-size: 12px; padding: 6px !important; width: 100% !important; box-sizing: border-box; }
             .total-row td { border: 1px solid #000 !important; }
 
-            .sig-canvas-container { border: none; border-bottom: none; border-radius: 0; margin-bottom: 0; }
-            
-            /* Ajuste para as assinaturas no PDF ficarem bem divididas */
-            .signatures-footer { flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 20px; margin-top: 20px; page-break-inside: avoid; }
-            .sig-block { width: 48%; }
+            .sig-canvas-container { border: none; }
+            .signatures-grid { gap: 40px; flex-wrap: nowrap; }
         }
     </style>
 </head>
@@ -121,21 +119,21 @@
         <p>Biomédico Esteta - CRBM 39219 | Av. Paulista, 2202 - São Paulo</p>
     </div>
 
-    <!-- Indicador Visual de Passos -->
+    <!-- Indicador Visual de Passos Atualizado -->
     <div class="stepper no-print">
         <div class="step-dot active" id="dot-1">1. Admissão</div>
-        <div class="step-dot" id="dot-2">2. Mapeamento</div>
-        <div class="step-dot" id="dot-3">3. Planejamento</div>
-        <div class="step-dot" id="dot-4">4. Consentimento</div>
+        <div class="step-dot" id="dot-2">2. Orçamento</div>
+        <div class="step-dot" id="dot-3">3. Consentimento</div>
+        <div class="step-dot" id="dot-4">4. Execução e Prontuário</div>
     </div>
 
     <!-- ================= PASSO 1: INFORMAÇÕES E ANAMNESE ================= -->
     <div class="step-content active" id="step-1">
         <div class="section-title">Dados Pessoais</div>
         <div class="form-row">
-            <div class="form-group" style="flex: 2;"><label>Nome Completo:</label><input type="text" id="client-name" oninput="atualizarDadosPaciente()"></div>
+            <div class="form-group" style="flex: 2;"><label>Nome Completo:</label><input type="text" id="client-name" oninput="atualizarTermo()"></div>
             <div class="form-group"><label>Data de Nasc.:</label><input type="date"></div>
-            <div class="form-group"><label>CPF:</label><input type="tel" id="client-cpf" oninput="atualizarDadosPaciente()" placeholder="000.000.000-00"></div>
+            <div class="form-group"><label>CPF:</label><input type="tel" id="client-cpf" oninput="atualizarTermo()" placeholder="000.000.000-00"></div>
         </div>
         <div class="form-row">
             <div class="form-group"><label>Celular (WhatsApp):</label><input type="tel" placeholder="(11) 90000-0000"></div>
@@ -176,13 +174,106 @@
 
         <div class="nav-buttons">
             <div></div> 
-            <button class="btn btn-primary" onclick="goToStep(2)">Avançar: Mapeamento Clínico ➔</button>
+            <button class="btn btn-primary" onclick="goToStep(2)">Avançar: Planejamento Financeiro ➔</button>
         </div>
     </div>
 
-    <!-- ================= PASSO 2: MAPEAMENTO E FOTO ================= -->
+    <!-- ================= PASSO 2: FINANCEIRO (ORÇAMENTO) ================= -->
     <div class="step-content" id="step-2">
-        <div class="section-title">Planejamento Digital e Registros</div>
+        <div class="section-title">Planejamento e Orçamento</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Data</th>
+                    <th style="width: 45%;">Procedimento Proposto</th>
+                    <th style="width: 20%;">Valor (R$)</th>
+                    <th style="width: 20%;">Forma de Pagamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text"></td>
+                    <td><input type="text" class="proc-desc" oninput="atualizarTermo()"></td>
+                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
+                    <td><input type="text"></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td>
+                    <td><input type="text" class="proc-desc" oninput="atualizarTermo()"></td>
+                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
+                    <td><input type="text"></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td>
+                    <td><input type="text" class="proc-desc" oninput="atualizarTermo()"></td>
+                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
+                    <td><input type="text"></td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="2" style="text-align: right;">VALOR TOTAL DO TRATAMENTO:</td>
+                    <td colspan="2">R$ <span id="total-display">0.00</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="goToStep(1)">⬅ Voltar</button>
+            <button class="btn btn-primary" onclick="goToStep(3)">Avançar: Termo de Consentimento ➔</button>
+        </div>
+    </div>
+
+    <!-- ================= PASSO 3: TERMO DE CONSENTIMENTO ================= -->
+    <div class="step-content" id="step-3">
+        <div class="section-title">Termo de Consentimento Livre e Esclarecido</div>
+        
+        <div class="no-print" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <label style="display:block; margin-bottom:8px;">Selecione o Modelo do Termo:</label>
+            <select id="termo-select" onchange="atualizarTermo()">
+                <option value="botox">Toxina Botulínica (Botox)</option>
+                <option value="sculptra">Bioestimulador de Colágeno</option>
+                <option value="preenchimento_facial">Preenchimento Facial</option>
+                <option value="preenchimento_intimo">Preenchimento Íntimo</option>
+                <option value="multiplo">Termo Geral / Múltiplos Procedimentos</option>
+            </select>
+        </div>
+
+        <div id="termo-texto" style="font-size: 14px; color: #334155; line-height: 1.6; text-align: justify; margin-bottom: 20px;">
+            <!-- O texto gerado automaticamente entra aqui -->
+        </div>
+
+        <!-- ASSINATURA DO TERMO (APENAS PACIENTE AQUI, ANTES DO PROCEDIMENTO) -->
+        <div>
+            <div class="signatures-grid">
+                <div class="sig-box" style="margin: 0 auto; max-width: 400px;">
+                    <div class="sig-canvas-container">
+                        <canvas id="sigCanvasTermo" class="sig-canvas"></canvas>
+                    </div>
+                    <div class="sig-line">
+                        <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
+                        <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
+                    </div>
+                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxTermo, sigCanvasTermo)" style="margin-top: 10px; width: 100%;">Limpar Assinatura</button>
+                </div>
+            </div>
+            <div class="date-centered">
+                Data do Aceite: <input type="date" id="data_termo">
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="goToStep(2)">⬅ Voltar</button>
+            <button class="btn btn-primary" onclick="goToStep(4)">Avançar: Execução e Prontuário ➔</button>
+        </div>
+    </div>
+
+    <!-- ================= PASSO 4: EXECUÇÃO (MAPA, FOTO E ASSINATURA FINAL) ================= -->
+    <div class="step-content" id="step-4">
+        
+        <div class="no-print" style="margin-bottom: 25px; background: #fff3cd; padding: 15px; border-radius: 12px; border: 1px solid #ffe69c; color: #856404; font-size: 14px; text-align: center;">
+            <strong>Atenção Profissional:</strong> Realize a marcação física no paciente, registre a foto e mapeie as doses abaixo.
+        </div>
+
+        <div class="section-title">Registro Clínico de Execução</div>
         
         <div class="toolbar no-print">
             <div>
@@ -202,7 +293,7 @@
 
         <div class="clinical-records">
             <div class="canvas-wrapper">
-                <label style="font-weight: 700; color: #0f172a; margin-bottom: 10px; display: block; text-align: center;">Mapeamento Digital</label>
+                <label style="font-weight: 700; color: #0f172a; margin-bottom: 10px; display: block; text-align: center;">Mapa de Doses</label>
                 <div class="canvas-container">
                     <img src="rosto.png" alt="Mapa Facial" class="face-bg" onerror="this.style.display='none'">
                     <canvas id="mapCanvas"></canvas>
@@ -210,141 +301,53 @@
             </div>
 
             <div class="photo-wrapper">
-                <label style="font-weight: 700; color: #0f172a; margin-bottom: 10px; display: block; text-align: center;">Evidência Física (Foto)</label>
+                <label style="font-weight: 700; color: #0f172a; margin-bottom: 10px; display: block; text-align: center;">Evidência Física (Marcação)</label>
                 <div class="photo-container" id="photo-display">
                     <img id="patient-photo" src="" alt="Foto do Paciente">
                 </div>
-                <button id="btn-remover-foto" class="btn btn-secondary no-print" onclick="removerFoto()" style="display: none; margin-top: 10px;">Remover Foto</button>
+                <button id="btn-remover-foto" class="btn btn-secondary no-print" onclick="removerFoto()" style="display: none; margin-top: 10px; width: 100%;">Remover Foto</button>
             </div>
         </div>
 
-        <div class="nav-buttons">
-            <button class="btn btn-secondary" onclick="goToStep(1)">⬅ Voltar</button>
-            <button class="btn btn-primary" onclick="goToStep(3)">Avançar: Planejamento Financeiro ➔</button>
-        </div>
-    </div>
-
-    <!-- ================= PASSO 3: FINANCEIRO E ASSINATURA PRONTUÁRIO ================= -->
-    <div class="step-content" id="step-3">
-        <div class="section-title">Planejamento Final e Custos</div>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 15%;">Data</th>
-                    <th style="width: 45%;">Procedimento Realizado</th>
-                    <th style="width: 20%;">Valor (R$)</th>
-                    <th style="width: 20%;">Forma de Pagamento</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="proc-desc" oninput="atualizarDadosPaciente()"></td>
-                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
-                    <td><input type="text"></td>
-                </tr>
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="proc-desc" oninput="atualizarDadosPaciente()"></td>
-                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
-                    <td><input type="text"></td>
-                </tr>
-                <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="proc-desc" oninput="atualizarDadosPaciente()"></td>
-                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
-                    <td><input type="text"></td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="2" style="text-align: right;">VALOR TOTAL DO TRATAMENTO:</td>
-                    <td colspan="2">R$ <span id="total-display">0.00</span></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="signature-wrapper">
-            <div class="section-title">Aprovação do Planejamento Clínico</div>
-            <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 20px;">Declaro que as informações médicas prestadas nesta ficha são verdadeiras. Fui plenamente esclarecido(a) sobre o planejamento proposto e os valores acordados.</p>
+        <!-- ASSINATURAS DO PRONTUÁRIO (VALIDANDO A EXECUÇÃO) -->
+        <div style="margin-top: 40px;">
+            <div class="section-title">Validação do Prontuário Médico</div>
+            <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 10px;">Atesto que o procedimento planejado foi realizado conforme os registros visuais (fotografia e mapeamento de doses) apresentados acima.</p>
             
-            <div class="sig-canvas-container">
-                <canvas id="sigCanvasProntuario" class="sig-canvas"></canvas>
+            <div class="signatures-grid">
+                <!-- Paciente -->
+                <div class="sig-box">
+                    <div class="sig-canvas-container">
+                        <canvas id="sigCanvasProntuario" class="sig-canvas"></canvas>
+                    </div>
+                    <div class="sig-line">
+                        <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
+                        <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
+                    </div>
+                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxProntuario, sigCanvasProntuario)" style="margin-top: 10px; padding: 8px 12px; font-size: 12px; width: 100%;">Limpar Assinatura</button>
+                </div>
+
+                <!-- Profissional -->
+                <div class="sig-box">
+                    <div class="dr-sig-container">
+                        <!-- A sua assinatura é injetada aqui -->
+                        <img src="assinatura.png" alt="Assinatura Dr." class="dr-sig-img" onerror="this.style.display='none'">
+                    </div>
+                    <div class="sig-line">
+                        <strong>Dr. Francisco Phelipe de Aquino Costa</strong><br>
+                        <span>Biomédico Esteta - CRBM 39219</span>
+                    </div>
+                </div>
             </div>
             
-            <!-- Identificação Paciente + Profissional Lado a Lado no PDF -->
-            <div class="signatures-footer">
-                <div class="sig-block">
-                    <div class="sig-line">Assinatura do Paciente (Prontuário)</div>
-                    <div class="sig-subtext"><strong>Nome:</strong> <span class="out-client-name">Não informado</span></div>
-                    <div class="sig-subtext"><strong>CPF:</strong> <span class="out-client-cpf">Não informado</span></div>
-                    <div class="sig-subtext" style="margin-top: 5px;"><strong>Data:</strong> <input type="date" id="data_prontuario" style="border: none; background: transparent; padding: 0; width: 120px; font-weight: bold; font-family: inherit;"></div>
-                </div>
-
-                <div class="sig-block">
-                    <!-- Sobe a imagem de assinatura.png do GitHub se existir -->
-                    <img src="assinatura.png" alt="Rubrica" class="pro-signature-img" onerror="this.style.display='none'">
-                    <div class="sig-line">Dr. Francisco Phelipe de Aquino Costa</div>
-                    <div class="sig-subtext">Biomédico Esteta - CRBM 39219</div>
-                    <div class="sig-subtext">Responsável Técnico</div>
-                </div>
+            <div class="date-centered">
+                Data da Execução: <input type="date" id="data_prontuario">
             </div>
-
-            <button class="btn btn-secondary no-print" onclick="clearSig(sigCtxProntuario, sigCanvasProntuario)" style="margin-top: 15px;">Limpar Assinatura</button>
-        </div>
-
-        <div class="nav-buttons">
-            <button class="btn btn-secondary" onclick="goToStep(2)">⬅ Voltar</button>
-            <button class="btn btn-primary" onclick="goToStep(4)">Avançar: Termo de Consentimento ➔</button>
-        </div>
-    </div>
-
-    <!-- ================= PASSO 4: TERMO DE CONSENTIMENTO E FINALIZAÇÃO ================= -->
-    <div class="step-content" id="step-4">
-        <div class="section-title">Termo de Consentimento Livre e Esclarecido</div>
-        
-        <div class="no-print" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
-            <label style="display:block; margin-bottom:8px;">Selecione o Modelo do Termo de Consentimento:</label>
-            <select id="termo-select" onchange="atualizarDadosPaciente()">
-                <option value="botox">Toxina Botulínica (Botox)</option>
-                <option value="sculptra">Bioestimulador de Colágeno</option>
-                <option value="preenchimento_facial">Preenchimento Facial</option>
-                <option value="preenchimento_intimo">Preenchimento Íntimo</option>
-                <option value="multiplo">Termo Geral / Múltiplos Procedimentos</option>
-            </select>
-        </div>
-
-        <div id="termo-texto" style="font-size: 14px; color: #334155; line-height: 1.6; text-align: justify; margin-bottom: 30px;">
-            <!-- O texto gerado automaticamente entra aqui -->
-        </div>
-
-        <div class="signature-wrapper">
-            <div class="sig-canvas-container">
-                <canvas id="sigCanvasTermo" class="sig-canvas"></canvas>
-            </div>
-            
-            <!-- Identificação Paciente + Profissional Lado a Lado no PDF -->
-            <div class="signatures-footer">
-                <div class="sig-block">
-                    <div class="sig-line">Assinatura do Paciente (Consentimento)</div>
-                    <div class="sig-subtext"><strong>Nome:</strong> <span class="out-client-name">Não informado</span></div>
-                    <div class="sig-subtext"><strong>CPF:</strong> <span class="out-client-cpf">Não informado</span></div>
-                    <div class="sig-subtext" style="margin-top: 5px;"><strong>Data:</strong> <input type="date" id="data_termo" style="border: none; background: transparent; padding: 0; width: 120px; font-weight: bold; font-family: inherit;"></div>
-                </div>
-
-                <div class="sig-block">
-                    <!-- Sobe a imagem de assinatura.png do GitHub se existir -->
-                    <img src="assinatura.png" alt="Rubrica" class="pro-signature-img" onerror="this.style.display='none'">
-                    <div class="sig-line">Dr. Francisco Phelipe de Aquino Costa</div>
-                    <div class="sig-subtext">Biomédico Esteta - CRBM 39219</div>
-                    <div class="sig-subtext">Responsável Técnico</div>
-                </div>
-            </div>
-
-            <button class="btn btn-secondary no-print" onclick="clearSig(sigCtxTermo, sigCanvasTermo)" style="margin-top: 15px;">Limpar Assinatura</button>
         </div>
 
         <div class="nav-buttons" style="border-top: none;">
             <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
-            <button class="btn btn-primary" style="background-color: #0f172a;" onclick="window.print()">🖨️ Imprimir / Salvar Prontuário Completo</button>
+            <button class="btn btn-primary" style="background-color: #0f172a;" onclick="window.print()">🖨️ Imprimir Prontuário Completo</button>
         </div>
     </div>
 
@@ -365,16 +368,70 @@
             document.getElementById('dot-' + i).classList.add('active');
         }
 
-        if (step === 2) { setTimeout(resizeMap, 50); }
-        if (step === 3) { setTimeout(() => initSignature(sigCanvasProntuario, sigCtxProntuario), 50); }
-        if (step === 4) { 
-            atualizarDadosPaciente(); 
+        // Inicializa/redimensiona os canvas na aba correta para evitar bugs
+        if (step === 3) { 
+            atualizarTermo(); 
             setTimeout(() => initSignature(sigCanvasTermo, sigCtxTermo), 50); 
+        }
+        if (step === 4) { 
+            setTimeout(resizeMap, 50); 
+            setTimeout(() => initSignature(sigCanvasProntuario, sigCtxProntuario), 50); 
         }
         window.scrollTo(0, 0);
     }
 
-    // --- LÓGICA DO MAPA FACIAL ---
+    // --- CÁLCULO FINANCEIRO (PASSO 2) ---
+    let totalValor = 0;
+    function calcularTotal() {
+        totalValor = 0;
+        document.querySelectorAll('.proc-val').forEach(input => {
+            let val = parseFloat(input.value.replace(',', '.'));
+            if (!isNaN(val)) totalValor += val;
+        });
+        document.getElementById('total-display').innerText = totalValor.toFixed(2).replace('.', ',');
+        atualizarTermo();
+    }
+
+    // --- GERAÇÃO DO TERMO E INJEÇÃO DOS DADOS (PASSO 3) ---
+    const termsDB = {
+        botox: "autorizo a aplicação de <strong>Toxina Botulínica</strong>. Fui informado(a) de que a ação causa um relaxamento muscular temporário. Comprometo-me a não deitar, não abaixar a cabeça, não massagear a região tratada e não praticar atividades físicas intensas nas primeiras 4 a 24 horas.",
+        sculptra: "autorizo o tratamento com <strong>Bioestimuladores de Colágeno</strong>. Compreendo que os resultados são graduais. Comprometo-me expressamente a realizar as massagens vigorosas na área tratada (regra dos 5 minutos, 5 vezes ao dia, por 5 dias), sob pena de elevação do risco de nódulos.",
+        preenchimento_facial: "dou o meu consentimento para o procedimento de <strong>Preenchimento Facial</strong> com ácido hialurônico. Assumo a responsabilidade de não massagear o local preenchido por conta própria e evitar exposição ao calor extremo ou sol nas primeiras 48 horas.",
+        preenchimento_intimo: "autorizo o procedimento de <strong>Preenchimento Íntimo</strong>. Comprometo-me a seguir rigorosamente os cuidados: abster-me de relações sexuais com atrito pelo período recomendado, evitar o uso de roupas apertadas e manter rigorosa higiene local.",
+        multiplo: "autorizo a realização dos procedimentos estéticos e terapêuticos discriminados no planejamento clínico acima. Declaro ter recebido todas as orientações referentes aos cuidados pós-procedimento específicos de cada aplicação."
+    };
+
+    function atualizarTermo() {
+        // Pega dados digitados no Passo 1
+        const nome = document.getElementById('client-name').value.trim() || "NOME DO PACIENTE";
+        const cpf = document.getElementById('client-cpf').value.trim() || "000.000.000-00";
+        const tipoTermo = document.getElementById('termo-select').value;
+        
+        // Atualiza dinamicamente as linhas de assinatura (Passo 3 e Passo 4)
+        document.querySelectorAll('.dynamic-nome').forEach(el => el.innerText = nome.toUpperCase());
+        document.querySelectorAll('.dynamic-cpf').forEach(el => el.innerText = cpf);
+
+        // Pega os procedimentos escritos na tabela
+        let listaProcs = [];
+        document.querySelectorAll('.proc-desc').forEach(input => {
+            if(input.value.trim() !== '') listaProcs.push(input.value.trim());
+        });
+        let descProcs = listaProcs.length > 0 ? listaProcs.join(', ') : "Conforme descrito na tabela de orçamento";
+
+        // Monta o texto do Termo
+        let textoFinal = `
+            <p>Eu, <strong>${nome.toUpperCase()}</strong>, inscrito(a) no CPF sob o nº <strong>${cpf}</strong>, de forma livre e esclarecida, ${termsDB[tipoTermo]}</p>
+            <p>Fui devidamente informado(a) sobre as indicações, contraindicações, riscos inerentes (como inchaço, vermelhidão e pequenos hematomas transitórios) e todos os cuidados pós-procedimento necessários para o sucesso do tratamento.</p>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 20px;">
+                <p style="margin: 0 0 10px 0;"><strong>Resumo dos Procedimentos a serem realizados:</strong><br>${descProcs}</p>
+                <p style="margin: 0;"><strong>Valor Total Acordado:</strong> R$ ${totalValor.toFixed(2).replace('.', ',')}</p>
+            </div>
+            <p style="margin-top: 20px;">Declaro ter lido, compreendido e concordado com todas as informações constantes neste termo e no orçamento apresentado.</p>
+        `;
+        document.getElementById('termo-texto').innerHTML = textoFinal;
+    }
+
+    // --- LÓGICA DO MAPA FACIAL (PASSO 4) ---
     const mapCanvas = document.getElementById('mapCanvas');
     const mapCtx = mapCanvas.getContext('2d');
     const mapContainer = document.querySelector('.canvas-container');
@@ -410,7 +467,7 @@
 
     function clearMap() { if(confirm("Apagar desenho?")) mapCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height); }
 
-    // --- CÂMERA E FOTO ---
+    // --- CÂMERA E FOTO (PASSO 4) ---
     const cameraInput = document.getElementById('camera-input');
     const photoDisplay = document.getElementById('photo-display');
     const patientPhoto = document.getElementById('patient-photo');
@@ -430,60 +487,11 @@
     });
     function removerFoto() { patientPhoto.src = ""; photoDisplay.style.display = 'none'; btnRemover.style.display = 'none'; cameraInput.value = ""; }
 
-    // --- CÁLCULO FINANCEIRO ---
-    let totalValor = 0;
-    function calcularTotal() {
-        totalValor = 0;
-        document.querySelectorAll('.proc-val').forEach(input => {
-            let val = parseFloat(input.value.replace(',', '.'));
-            if (!isNaN(val)) totalValor += val;
-        });
-        document.getElementById('total-display').innerText = totalValor.toFixed(2).replace('.', ',');
-        atualizarDadosPaciente();
-    }
-
-    // --- ATUALIZAÇÃO DADOS DO PACIENTE E TERMO DE CONSENTIMENTO ---
-    const termsDB = {
-        botox: "autorizo a aplicação de <strong>Toxina Botulínica</strong>. Fui informado(a) de que a ação causa um relaxamento muscular temporário. Comprometo-me a não deitar, não abaixar a cabeça, não massagear a região tratada e não praticar atividades físicas intensas nas primeiras 4 a 24 horas.",
-        sculptra: "autorizo o tratamento com <strong>Bioestimuladores de Colágeno</strong>. Compreendo que os resultados são graduais. Comprometo-me expressamente a realizar as massagens vigorosas na área tratada (regra dos 5 minutos, 5 vezes ao dia, por 5 dias), sob pena de elevação do risco de nódulos.",
-        preenchimento_facial: "dou o meu consentimento para o procedimento de <strong>Preenchimento Facial</strong> com ácido hialurônico. Assumo a responsabilidade de não massagear o local preenchido por conta própria e evitar exposição ao calor extremo ou sol nas primeiras 48 horas.",
-        preenchimento_intimo: "autorizo o procedimento de <strong>Preenchimento Íntimo</strong>. Comprometo-me a seguir rigorosamente os cuidados: abster-me de relações sexuais com atrito pelo período recomendado, evitar o uso de roupas apertadas e manter rigorosa higiene local.",
-        multiplo: "autorizo a realização dos procedimentos estéticos e terapêuticos discriminados no planejamento clínico acima. Declaro ter recebido todas as orientações referentes aos cuidados pós-procedimento específicos de cada aplicação."
-    };
-
-    function atualizarDadosPaciente() {
-        const nome = document.getElementById('client-name').value.trim();
-        const cpf = document.getElementById('client-cpf').value.trim();
-        
-        // Atualiza os blocos de assinatura abaixo do Canvas
-        document.querySelectorAll('.out-client-name').forEach(el => el.textContent = nome || "Não informado");
-        document.querySelectorAll('.out-client-cpf').forEach(el => el.textContent = cpf || "Não informado");
-
-        // Atualiza texto do termo
-        const tipoTermo = document.getElementById('termo-select').value;
-        let listaProcs = [];
-        document.querySelectorAll('.proc-desc').forEach(input => {
-            if(input.value.trim() !== '') listaProcs.push(input.value.trim());
-        });
-        let descProcs = listaProcs.length > 0 ? listaProcs.join(', ') : "Conforme descrito na tabela de planejamento";
-
-        let textoFinal = `
-            <p>Eu, <strong>${nome || "___________________________________"}</strong>, inscrito(a) no CPF sob o nº <strong>${cpf || "____.____.____-____"}</strong>, de forma livre e esclarecida, ${termsDB[tipoTermo]}</p>
-            <p>Fui devidamente informado(a) sobre as indicações, contraindicações, riscos inerentes (como inchaço, vermelhidão e pequenos hematomas transitórios) e todos os cuidados pós-procedimento necessários para o sucesso do tratamento.</p>
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 20px;">
-                <p style="margin: 0 0 10px 0;"><strong>Resumo dos Procedimentos a serem realizados:</strong><br>${descProcs}</p>
-                <p style="margin: 0;"><strong>Valor Total Acordado:</strong> R$ ${totalValor.toFixed(2).replace('.', ',')}</p>
-            </div>
-            <p style="margin-top: 20px;">Declaro ter lido, compreendido e concordado com todas as informações constantes neste termo e no planejamento clínico financeiro.</p>
-        `;
-        document.getElementById('termo-texto').innerHTML = textoFinal;
-    }
-
     // --- SISTEMA DE ASSINATURAS (REUTILIZÁVEL) ---
-    const sigCanvasProntuario = document.getElementById('sigCanvasProntuario');
-    const sigCtxProntuario = sigCanvasProntuario.getContext('2d');
     const sigCanvasTermo = document.getElementById('sigCanvasTermo');
     const sigCtxTermo = sigCanvasTermo.getContext('2d');
+    const sigCanvasProntuario = document.getElementById('sigCanvasProntuario');
+    const sigCtxProntuario = sigCanvasProntuario.getContext('2d');
 
     function initSignature(canvas, ctx) {
         const rect = canvas.parentElement.getBoundingClientRect();
@@ -511,11 +519,13 @@
 
     function clearSig(ctx, canvas) { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    // Inicia ouvintes de redimensionamento de janela para corrigir assinaturas e mapa
+    // Inicia ouvintes de redimensionamento de janela
     window.addEventListener('resize', () => {
-        if(document.getElementById('step-2').classList.contains('active')) resizeMap();
-        if(document.getElementById('step-3').classList.contains('active')) initSignature(sigCanvasProntuario, sigCtxProntuario);
-        if(document.getElementById('step-4').classList.contains('active')) initSignature(sigCanvasTermo, sigCtxTermo);
+        if(document.getElementById('step-3').classList.contains('active')) initSignature(sigCanvasTermo, sigCtxTermo);
+        if(document.getElementById('step-4').classList.contains('active')) {
+            resizeMap();
+            initSignature(sigCanvasProntuario, sigCtxProntuario);
+        }
     });
 
 </script>
