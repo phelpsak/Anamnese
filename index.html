@@ -5,82 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Prontuário Digital Inteligente</title>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
-        body { background-color: #f4f6f9; color: #1e293b; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        .container { background: white; padding: 30px 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); width: 100%; max-width: 900px; margin-bottom: 30px; }
+        .container { background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); width: 100%; max-width: 900px; margin-bottom: 30px; }
         
-        /* Cabeçalho e Indicador de Passos */
-        .clinic-header { text-align: center; margin-bottom: 25px; }
-        .clinic-header h1 { margin: 0; font-size: 24px; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
-        .clinic-header p { margin: 5px 0 0 0; font-size: 13px; color: #64748b; }
+        /* Cabeçalho inspirado na Logo */
+        .clinic-header { text-align: center; margin-bottom: 35px; }
+        .clinic-header h1 { margin: 0; font-size: 28px; color: #1e3a8a; font-weight: 600; letter-spacing: 0.5px; }
+        .clinic-header p { margin: 5px 0 0 0; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 2px; }
         
-        .stepper { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
-        .step-dot { background: #e2e8f0; color: #64748b; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; transition: 0.3s; }
-        .step-dot.active { background: #8e7d67; color: white; }
+        /* Indicador de Passos (Stepper) */
+        .stepper { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; border-bottom: 1px solid #f1f5f9; padding-bottom: 25px; }
+        .step-dot { background: #f1f5f9; color: #64748b; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .step-dot.active { background: #1d4ed8; color: white; box-shadow: 0 2px 10px rgba(29, 78, 216, 0.2); }
 
         /* Estrutura das Etapas */
         .step-content { display: none; }
         .step-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-title { font-size: 15px; font-weight: 700; color: #8e7d67; text-transform: uppercase; margin: 0 0 20px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+        .section-title { font-size: 15px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; margin: 0 0 20px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
 
-        /* Formulários */
+        /* Formulários estilo Fillout (Clean) */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; }
         .form-group.full { width: 100%; flex: none; }
-        label { font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 6px; }
-        input, select, textarea { padding: 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 14px; background: #f8fafc; color: #1e293b; width: 100%; transition: 0.2s; }
+        label { font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+        input, select, textarea { padding: 12px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; background: #ffffff; color: #1e293b; width: 100%; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
         textarea { resize: vertical; min-height: 60px; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: #8e7d67; background: #fff; box-shadow: 0 0 0 3px rgba(142, 125, 103, 0.1); }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #1d4ed8; background: #fff; box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
+        
         .radio-group { display: flex; gap: 20px; align-items: center; padding: 10px 0; }
-        .radio-item { display: flex; align-items: center; gap: 5px; font-size: 14px; cursor: pointer; }
+        .radio-item { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; color: #334155; }
+        input[type="radio"] { width: auto; accent-color: #1d4ed8; transform: scale(1.1); }
 
         /* Mapeamento e Foto */
-        .toolbar { background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; }
+        .toolbar { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; }
         .clinical-records { display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; width: 100%; justify-content: space-between; }
         .canvas-wrapper, .photo-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
-        .canvas-container { position: relative; background: white; border-radius: 16px; overflow: hidden; border: 2px solid #e2e8f0; width: 100%; aspect-ratio: 3 / 4; margin: 0 auto; }
+        .canvas-container { position: relative; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; width: 100%; aspect-ratio: 3 / 4; margin: 0 auto; }
         .face-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0.5; pointer-events: none; }
         #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
-        .photo-container { display: none; background: white; border-radius: 16px; padding: 10px; border: 2px dashed #cbd5e1; width: 100%; aspect-ratio: 3 / 4; align-items: center; justify-content: center; margin: 0 auto; }
-        .photo-container img { max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: contain; }
+        .photo-container { display: none; background: white; border-radius: 12px; padding: 10px; border: 1px dashed #94a3b8; width: 100%; aspect-ratio: 3 / 4; align-items: center; justify-content: center; margin: 0 auto; }
+        .photo-container img { max-width: 100%; max-height: 100%; border-radius: 6px; object-fit: contain; }
 
-        /* Tabela */
+        /* Tabela Financeiro */
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
-        th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #64748b; border: 1px solid #e2e8f0; text-transform: uppercase; }
+        th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #475569; border: 1px solid #e2e8f0; text-transform: uppercase; font-weight: 700; }
         td { border: 1px solid #e2e8f0; padding: 0; overflow: hidden; text-overflow: ellipsis; }
         td input { border: none; border-radius: 0; background: transparent; padding: 12px; margin: 0; box-shadow: none; width: 100%; }
-        td input:focus { box-shadow: inset 0 0 0 2px #8e7d67; }
-        .total-row { background: #f8fafc; font-weight: bold; }
+        td input:focus { box-shadow: inset 0 0 0 2px #1d4ed8; }
+        .total-row { background: #f8fafc; font-weight: bold; color: #1e3a8a; }
         .total-row td { padding: 12px; border: 1px solid #e2e8f0; }
 
-        /* Assinaturas Lado a Lado */
+        /* Assinaturas */
         .signatures-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; }
         .sig-box { flex: 1; min-width: 250px; text-align: center; }
-        
-        .sig-canvas-container { border: 2px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; height: 160px; position: relative; margin-bottom: 5px; }
+        .sig-canvas-container { border: 1px dashed #94a3b8; border-radius: 8px; background: #f8fafc; height: 160px; position: relative; margin-bottom: 10px; transition: 0.2s; }
+        .sig-canvas-container:hover { border-color: #1d4ed8; background: #fff; }
         .sig-canvas { width: 100%; height: 100%; cursor: crosshair; }
-        
         .dr-sig-container { height: 160px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px; margin-bottom: 5px; }
         .dr-sig-img { max-height: 140px; max-width: 100%; object-fit: contain; }
-        
         .sig-line { border-top: 1.5px solid #1e293b; padding-top: 8px; font-size: 14px; line-height: 1.4; }
         .sig-line strong { color: #0f172a; }
         .sig-line span { font-size: 12px; color: #475569; }
-
-        .date-centered { text-align: center; margin-top: 25px; font-size: 14px; font-weight: bold; }
-        .date-centered input { display: inline-block; width: 120px; text-align: center; border: none; background: transparent; padding: 0; font-weight: bold; font-size: 14px; }
+        .date-centered { text-align: center; margin-top: 25px; font-size: 14px; font-weight: bold; color: #334155; }
+        .date-centered input { display: inline-block; width: 120px; text-align: center; border: none; background: transparent; padding: 0; font-weight: bold; font-size: 14px; box-shadow: none; }
 
         /* Navegação e Botões */
-        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 2px solid #f1f5f9; }
-        .btn { padding: 14px 24px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; }
-        .btn-primary { background-color: #8e7d67; color: white; }
-        .btn-primary:hover { background-color: #766754; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 35px; padding-top: 25px; border-top: 1px solid #f1f5f9; }
+        .btn { padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; letter-spacing: 0.3px; }
+        .btn-primary { background-color: #1d4ed8; color: white; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2); }
+        .btn-primary:hover { background-color: #1e3a8a; transform: translateY(-1px); }
         .btn-secondary { background-color: #f1f5f9; color: #475569; }
-        .btn-secondary:hover { background-color: #e2e8f0; }
-        .btn-blue { background-color: #3b82f6; color: white; }
+        .btn-secondary:hover { background-color: #e2e8f0; color: #1e293b; }
+        .btn-blue { background-color: #2563eb; color: white; }
+        .btn-blue:hover { background-color: #1d4ed8; }
 
         /* ================= MODO DE IMPRESSÃO (PDF) ================= */
         @media print {
@@ -92,7 +93,7 @@
             
             #step-2, #step-3, #step-4 { page-break-before: always; padding-top: 20px; }
 
-            input, textarea, select { border: none; background: transparent; padding: 0; font-size: 13px; color: #000; resize: none; -webkit-appearance: none; }
+            input, textarea, select { border: none; background: transparent; padding: 0; font-size: 13px; color: #000; resize: none; -webkit-appearance: none; box-shadow: none !important; }
             .form-group { border-bottom: 1px dotted #cbd5e1; padding-bottom: 4px; margin-bottom: 12px; }
             .radio-group { padding: 0; }
             
@@ -116,7 +117,7 @@
     
     <div class="clinic-header">
         <h1>Dr. Phelipe Aquino</h1>
-        <p>Biomédico Esteta - CRBM 39219 | Av. Paulista, 2202 - São Paulo</p>
+        <p>Estética e Rejuvenescimento | CRBM 39219</p>
     </div>
 
     <!-- Indicador Visual de Passos -->
@@ -156,7 +157,7 @@
                 <div class="radio-group">
                     <label class="radio-item"><input type="radio" name="anestesia" value="Sim"> Sim</label>
                     <label class="radio-item"><input type="radio" name="anestesia" value="Não"> Não</label>
-                    <input type="text" placeholder="Houve complicação?" style="margin-left: 15px;">
+                    <input type="text" placeholder="Houve complicação?" style="margin-left: 15px; max-width: 300px;">
                 </div>
             </div>
         </div>
@@ -167,14 +168,14 @@
             <div class="form-group"><label>Uso de álcool?</label>
                 <div class="radio-group"><label class="radio-item"><input type="radio" name="alcool"> Sim</label> <label class="radio-item"><input type="radio" name="alcool"> Não</label></div>
             </div>
-            <div class="form-group"><label>Grávida?</label>
+            <div class="form-group"><label>Está gestante?</label>
                 <div class="radio-group"><label class="radio-item"><input type="radio" name="gravida"> Sim</label> <label class="radio-item"><input type="radio" name="gravida"> Não</label></div>
             </div>
         </div>
 
         <div class="nav-buttons">
             <div></div> 
-            <button class="btn btn-primary" onclick="goToStep(2)">Avançar: Planejamento Financeiro ➔</button>
+            <button class="btn btn-primary" onclick="goToStep(2)">Próximo ➔</button>
         </div>
     </div>
 
@@ -218,7 +219,7 @@
 
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="goToStep(1)">⬅ Voltar</button>
-            <button class="btn btn-primary" onclick="goToStep(3)">Avançar: Termo de Consentimento ➔</button>
+            <button class="btn btn-primary" onclick="goToStep(3)">Próximo ➔</button>
         </div>
     </div>
 
@@ -226,8 +227,8 @@
     <div class="step-content" id="step-3">
         <div class="section-title">Termo de Consentimento Livre e Esclarecido</div>
         
-        <div class="no-print" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
-            <label style="display:block; margin-bottom:8px;">Selecione o Modelo do Termo:</label>
+        <div class="no-print" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <label style="display:block; margin-bottom:8px;">Selecione o Procedimento Principal (Base do Termo):</label>
             <select id="termo-select" onchange="atualizarTermo()">
                 <option value="botox">Toxina Botulínica (Botox)</option>
                 <option value="sculptra">Bioestimulador de Colágeno</option>
@@ -252,7 +253,7 @@
                         <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
                         <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
                     </div>
-                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxTermo, sigCanvasTermo)" style="margin-top: 10px; width: 100%;">Limpar Assinatura</button>
+                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxTermo, sigCanvasTermo)" style="margin-top: 15px; width: 100%;">Limpar Assinatura</button>
                 </div>
             </div>
             <div class="date-centered">
@@ -262,14 +263,14 @@
 
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="goToStep(2)">⬅ Voltar</button>
-            <button class="btn btn-primary" onclick="goToStep(4)">Avançar: Execução e Prontuário ➔</button>
+            <button class="btn btn-primary" onclick="goToStep(4)">Próximo ➔</button>
         </div>
     </div>
 
     <!-- ================= PASSO 4: EXECUÇÃO (MAPA, FOTO E ASSINATURA FINAL) ================= -->
     <div class="step-content" id="step-4">
         
-        <div class="no-print" style="margin-bottom: 25px; background: #fff3cd; padding: 15px; border-radius: 12px; border: 1px solid #ffe69c; color: #856404; font-size: 14px; text-align: center;">
+        <div class="no-print" style="margin-bottom: 25px; background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; font-size: 14px; text-align: center;">
             <strong>Atenção Profissional:</strong> Realize a marcação física no paciente, registre a foto e mapeie as doses abaixo.
         </div>
 
@@ -277,7 +278,7 @@
         
         <div class="toolbar no-print">
             <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#94a3b8; margin-bottom:5px;">Produto / Legenda</label>
+                <label style="display:block; font-size:12px; font-weight:600; color:#64748b; margin-bottom:5px;">Produto / Legenda</label>
                 <select id="color-select" style="width: 220px;">
                     <option value="#3b82f6">Toxina Botulínica (Azul)</option>
                     <option value="#ec4899">Bioestimulador (Rosa)</option>
@@ -286,14 +287,14 @@
             </div>
             <div style="display: flex; gap: 10px;">
                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-                <label for="camera-input" class="btn btn-blue" style="margin: 0;">📸 Foto da Marcação</label>
-                <button class="btn btn-secondary" onclick="clearMap()">Limpar Mapa</button>
+                <label for="camera-input" class="btn btn-blue" style="margin: 0; padding: 10px 16px;">📸 Foto do Planejamento</label>
+                <button class="btn btn-secondary" style="padding: 10px 16px;" onclick="clearMap()">Limpar Mapa</button>
             </div>
         </div>
 
         <div class="clinical-records">
             <div class="canvas-wrapper">
-                <label style="font-weight: 700; color: #0f172a; margin-bottom: 10px; display: block; text-align: center;">Mapa de Doses</label>
+                <label style="font-weight: 700; color: #1e3a8a; margin-bottom: 10px; display: block; text-align: center;">Mapa de Doses</label>
                 <div class="canvas-container">
                     <img src="rosto.png" alt="Mapa Facial" class="face-bg" onerror="this.style.display='none'">
                     <canvas id="mapCanvas"></canvas>
@@ -301,7 +302,7 @@
             </div>
 
             <div class="photo-wrapper">
-                <label style="font-weight: 700; color: #0f172a; margin-bottom: 10px; display: block; text-align: center;">Evidência Física (Marcação)</label>
+                <label style="font-weight: 700; color: #1e3a8a; margin-bottom: 10px; display: block; text-align: center;">Evidência Física (Marcação)</label>
                 <div class="photo-container" id="photo-display">
                     <img id="patient-photo" src="" alt="Foto do Paciente">
                 </div>
@@ -312,7 +313,7 @@
         <!-- ASSINATURAS DO PRONTUÁRIO (VALIDANDO A EXECUÇÃO) -->
         <div style="margin-top: 40px;">
             <div class="section-title">Validação do Prontuário Médico</div>
-            <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 10px;">Atesto que o procedimento planejado foi realizado conforme os registros visuais (fotografia e mapeamento de doses) apresentados acima.</p>
+            <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 15px;">Atesto que o procedimento planejado foi realizado conforme os registros visuais (fotografia e mapeamento de doses) apresentados acima.</p>
             
             <div class="signatures-grid">
                 <!-- Paciente -->
@@ -324,7 +325,7 @@
                         <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
                         <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
                     </div>
-                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxProntuario, sigCanvasProntuario)" style="margin-top: 10px; padding: 8px 12px; font-size: 12px; width: 100%;">Limpar Assinatura</button>
+                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxProntuario, sigCanvasProntuario)" style="margin-top: 15px; width: 100%;">Limpar Assinatura</button>
                 </div>
 
                 <!-- Profissional -->
@@ -349,7 +350,7 @@
             <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
                 <button class="btn btn-blue" onclick="enviarWhatsApp()">💬 WhatsApp + Imprimir</button>
-                <button class="btn btn-primary" style="background-color: #0f172a;" onclick="enviarParaBanco(); window.print()">🖨️ Salvar no Notion e Imprimir</button>
+                <button class="btn btn-primary" onclick="enviarParaBanco(); window.print()">Finalizar e Salvar no Notion</button>
             </div>
         </div>
     </div>
@@ -456,7 +457,7 @@
             mapCtx.fillStyle = color; mapCtx.fill();
             mapCtx.lineWidth = 2; mapCtx.strokeStyle = "#fff"; mapCtx.stroke();
             if (dose) {
-                mapCtx.font = "bold 15px -apple-system, sans-serif";
+                mapCtx.font = "bold 15px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
                 mapCtx.fillStyle = "#1e293b"; mapCtx.shadowColor = "white"; mapCtx.shadowBlur = 4;
                 mapCtx.fillText(dose, x + 10, y + 5); mapCtx.shadowBlur = 0;
             }
@@ -529,31 +530,32 @@
     function enviarParaBanco() {
         const webhookUrl = "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa"; 
 
+        // Captura o nome do procedimento selecionado (Texto ao invés do valor 'botox')
+        const procedimentoSelect = document.getElementById('termo-select');
+        const procedimentoNome = procedimentoSelect.options[procedimentoSelect.selectedIndex].text;
+
+        // Pacote completo atualizado com WhatsApp e Procedimento
         const dadosPaciente = {
             nome: document.getElementById('client-name').value.trim(),
             cpf: document.getElementById('client-cpf').value.trim(),
+            whatsapp: document.getElementById('client-phone').value.trim(),
+            procedimento: procedimentoNome,
             valor_total: totalValor, 
             data_atendimento: document.getElementById('data_prontuario').value
         };
 
-        alert("Enviando dados para o Notion... aguarde.");
-
         fetch(webhookUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dadosPaciente)
         })
         .then(response => {
-            if (response.ok) {
-                alert("✅ Sucesso! Os dados foram salvos no Notion.");
-            } else {
-                alert("⚠️ Erro de comunicação com o Make. Verifique a URL do Webhook.");
+            if (!response.ok) {
+                console.log("Aviso de comunicação com o Make. Verifique a URL do Webhook.");
             }
         })
         .catch(error => {
-            alert("❌ Falha na conexão: " + error.message);
+            console.log("Erro no envio em segundo plano: " + error.message);
         });
     }
 
@@ -562,32 +564,26 @@
         const nome = document.getElementById('client-name').value.trim() || "Paciente";
         let telefone = document.getElementById('client-phone').value.trim();
         
-        // Limpa o número de telefone (remove parênteses, traços e espaços)
         telefone = telefone.replace(/\D/g, '');
         
-        // Verifica se tem DDD, se não tiver ou estiver vazio, avisa o usuário
         if (telefone.length < 10) {
             alert("Por favor, preencha o celular do paciente com DDD no Passo 1.");
             return;
         }
         
-        // Adiciona o DDI do Brasil (55) se não estiver presente
         if (!telefone.startsWith('55')) {
             telefone = '55' + telefone;
         }
 
-        // Criação da mensagem personalizada
         const mensagem = `Olá, ${nome}! Aqui é da clínica do Dr. Phelipe Aquino (Av. Paulista, 2202).\n\nFoi um prazer receber você! Estou enviando em anexo o seu prontuário digital com o resumo do nosso planejamento clínico e os cuidados que conversamos.\n\nQualquer dúvida, estou à disposição!`;
         
-        // Codifica o texto para o formato de URL
         const textoCodificado = encodeURIComponent(mensagem);
-        
-        // Monta o link do WhatsApp e abre em nova aba
         const linkWhatsapp = `https://wa.me/${telefone}?text=${textoCodificado}`;
+        
         window.open(linkWhatsapp, '_blank');
         
-        // Aciona a tela de impressão para salvar o PDF
         setTimeout(() => {
+            enviarParaBanco();
             window.print();
         }, 500);
     }
