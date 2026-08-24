@@ -10,24 +10,20 @@
         
         .container { background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); width: 100%; max-width: 900px; margin-bottom: 30px; }
         
-        /* Cabeçalho inspirado na Logo */
         .clinic-header { text-align: center; margin-bottom: 35px; }
         .clinic-header h1 { margin: 0; font-size: 28px; color: #1e3a8a; font-weight: 600; letter-spacing: 0.5px; }
         .clinic-header p { margin: 5px 0 0 0; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* Indicador de Passos (Stepper) */
         .stepper { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; border-bottom: 1px solid #f1f5f9; padding-bottom: 25px; }
         .step-dot { background: #f1f5f9; color: #64748b; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
         .step-dot.active { background: #1d4ed8; color: white; box-shadow: 0 2px 10px rgba(29, 78, 216, 0.2); }
 
-        /* Estrutura das Etapas */
         .step-content { display: none; }
         .step-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .section-title { font-size: 15px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; margin: 0 0 20px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
 
-        /* Formulários estilo Fillout (Clean) */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; }
         .form-group.full { width: 100%; flex: none; }
@@ -38,9 +34,8 @@
         
         .radio-group { display: flex; gap: 20px; align-items: center; padding: 10px 0; }
         .radio-item { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; color: #334155; }
-        input[type="radio"] { width: auto; accent-color: #1d4ed8; transform: scale(1.1); }
+        input[type="radio"], input[type="checkbox"] { width: auto; accent-color: #1d4ed8; transform: scale(1.1); }
 
-        /* Mapeamento e Foto */
         .toolbar { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; }
         .clinical-records { display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; width: 100%; justify-content: space-between; }
         .canvas-wrapper, .photo-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
@@ -50,16 +45,17 @@
         .photo-container { display: none; background: white; border-radius: 12px; padding: 10px; border: 1px dashed #94a3b8; width: 100%; aspect-ratio: 3 / 4; align-items: center; justify-content: center; margin: 0 auto; }
         .photo-container img { max-width: 100%; max-height: 100%; border-radius: 6px; object-fit: contain; }
 
-        /* Tabela Financeiro */
+        /* Tabela Financeiro Atualizada */
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
         th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #475569; border: 1px solid #e2e8f0; text-transform: uppercase; font-weight: 700; }
-        td { border: 1px solid #e2e8f0; padding: 0; overflow: hidden; text-overflow: ellipsis; }
-        td input { border: none; border-radius: 0; background: transparent; padding: 12px; margin: 0; box-shadow: none; width: 100%; }
-        td input:focus { box-shadow: inset 0 0 0 2px #1d4ed8; }
+        td { border: 1px solid #e2e8f0; padding: 0; overflow: visible; vertical-align: top; }
+        .td-inner { padding: 6px; display: flex; flex-direction: column; gap: 5px; }
+        td input, td select { border: none; border-radius: 6px; background: transparent; padding: 10px; margin: 0; box-shadow: none; width: 100%; }
+        td input:focus, td select:focus { background: #f8fafc; box-shadow: inset 0 0 0 2px #1d4ed8; }
+        .proc-desc-manual { border: 1px solid #cbd5e1 !important; background: #fff !important; }
         .total-row { background: #f8fafc; font-weight: bold; color: #1e3a8a; }
         .total-row td { padding: 12px; border: 1px solid #e2e8f0; }
 
-        /* Assinaturas */
         .signatures-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; }
         .sig-box { flex: 1; min-width: 250px; text-align: center; }
         .sig-canvas-container { border: 1px dashed #94a3b8; border-radius: 8px; background: #f8fafc; height: 160px; position: relative; margin-bottom: 10px; transition: 0.2s; }
@@ -73,7 +69,6 @@
         .date-centered { text-align: center; margin-top: 25px; font-size: 14px; font-weight: bold; color: #334155; }
         .date-centered input { display: inline-block; width: 120px; text-align: center; border: none; background: transparent; padding: 0; font-weight: bold; font-size: 14px; box-shadow: none; }
 
-        /* Navegação e Botões */
         .nav-buttons { display: flex; justify-content: space-between; margin-top: 35px; padding-top: 25px; border-top: 1px solid #f1f5f9; }
         .btn { padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; letter-spacing: 0.3px; }
         .btn-primary { background-color: #1d4ed8; color: white; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2); }
@@ -83,29 +78,22 @@
         .btn-blue { background-color: #2563eb; color: white; }
         .btn-blue:hover { background-color: #1d4ed8; }
 
-        /* ================= MODO DE IMPRESSÃO (PDF) ================= */
         @media print {
             body { background: white; padding: 0; margin: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; overflow: hidden; }
-            
             .stepper, .nav-buttons, .toolbar, .no-print, #btn-remover-foto, .btn-limpar-sig { display: none !important; }
             .step-content { display: block !important; opacity: 1 !important; transform: none !important; }
-            
             #step-2, #step-3, #step-4 { page-break-before: always; padding-top: 20px; }
-
             input, textarea, select { border: none; background: transparent; padding: 0; font-size: 13px; color: #000; resize: none; -webkit-appearance: none; box-shadow: none !important; }
             .form-group { border-bottom: 1px dotted #cbd5e1; padding-bottom: 4px; margin-bottom: 12px; }
             .radio-group { padding: 0; }
-            
             .clinical-records { flex-direction: row; flex-wrap: nowrap; gap: 4%; }
             .canvas-wrapper, .photo-wrapper { width: 48%; min-width: auto; flex: none; }
             .canvas-container, .photo-container { border: none; box-shadow: none; display: flex !important; }
-            
             table { width: 100% !important; table-layout: fixed; }
             table, th, td { border: 1px solid #000 !important; word-break: break-word; }
-            td input { font-size: 12px; padding: 6px !important; width: 100% !important; box-sizing: border-box; }
+            td input, td select { font-size: 12px; padding: 6px !important; width: 100% !important; box-sizing: border-box; }
             .total-row td { border: 1px solid #000 !important; }
-
             .sig-canvas-container { border: none; }
             .signatures-grid { gap: 40px; flex-wrap: nowrap; }
         }
@@ -114,13 +102,11 @@
 <body>
 
 <div class="container">
-    
     <div class="clinic-header">
         <h1>Dr. Phelipe Aquino</h1>
         <p>Estética e Rejuvenescimento | CRBM 39219</p>
     </div>
 
-    <!-- Indicador Visual de Passos -->
     <div class="stepper no-print">
         <div class="step-dot active" id="dot-1">1. Admissão</div>
         <div class="step-dot" id="dot-2">2. Orçamento</div>
@@ -128,7 +114,7 @@
         <div class="step-dot" id="dot-4">4. Prontuário Final</div>
     </div>
 
-    <!-- ================= PASSO 1: INFORMAÇÕES E ANAMNESE ================= -->
+    <!-- PASSO 1 -->
     <div class="step-content active" id="step-1">
         <div class="section-title">Dados Pessoais</div>
         <div class="form-row">
@@ -175,43 +161,103 @@
                 <div class="radio-group"><label class="radio-item"><input type="radio" name="amamentando"> Sim</label> <label class="radio-item"><input type="radio" name="amamentando"> Não</label></div>
             </div>
         </div>
-
         <div class="nav-buttons">
             <div></div> 
             <button class="btn btn-primary" onclick="goToStep(2)">Próximo ➔</button>
         </div>
     </div>
 
-    <!-- ================= PASSO 2: FINANCEIRO (ORÇAMENTO) ================= -->
+    <!-- PASSO 2 -->
     <div class="step-content" id="step-2">
-        <div class="section-title">Planejamento e Orçamento</div>
+        <div class="section-title">Planejamento e Orçamento Automático</div>
         <table>
             <thead>
                 <tr>
                     <th style="width: 15%;">Data</th>
                     <th style="width: 45%;">Procedimento Proposto</th>
                     <th style="width: 20%;">Valor (R$)</th>
-                    <th style="width: 20%;">Forma de Pagamento</th>
+                    <th style="width: 20%;">Forma de Pagto</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tabela-orcamento">
+                <!-- As 3 linhas padrão -->
                 <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="proc-desc" oninput="atualizarTermo()"></td>
-                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
-                    <td><input type="text"></td>
+                    <td><div class="td-inner"><input type="date" class="proc-data"></div></td>
+                    <td>
+                        <div class="td-inner">
+                            <select class="proc-select" onchange="selecionarProcedimento(this)">
+                                <option value="">Selecione...</option>
+                                <option value="Botox Day (1 área)">Botox Day (1 área)</option>
+                                <option value="Toxina Botulínica (1 área)">Toxina Botulínica (1 área)</option>
+                                <option value="Toxina Botulínica (Full Face)">Toxina Botulínica (Full Face)</option>
+                                <option value="Bioestimulador de Colágeno (1 frasco)">Bioestimulador de Colágeno (1 frasco)</option>
+                                <option value="Radiesse (1 frasco)">Radiesse (1 frasco)</option>
+                                <option value="Sculptra (1 frasco)">Sculptra (1 frasco)</option>
+                                <option value="Microagulhamento (1 ativo)">Microagulhamento (1 ativo)</option>
+                                <option value="Lipoenzima (1 sessão)">Lipoenzima (1 sessão)</option>
+                                <option value="Lipoenzima (Pacote)">Lipoenzima (Pacote)</option>
+                                <option value="Preenchimento Facial (1 ml)">Preenchimento Facial (1 ml)</option>
+                                <option value="Preenchimento Corporal (10 ml)">Preenchimento Corporal (10 ml)</option>
+                                <option value="Preenchimento Íntimo (1 ml)">Preenchimento Íntimo (1 ml)</option>
+                                <option value="Outro">Outro (Digitar)</option>
+                            </select>
+                            <input type="text" class="proc-desc-manual no-print" placeholder="Qual?" style="display:none;" oninput="atualizarTermo()">
+                        </div>
+                    </td>
+                    <td><div class="td-inner"><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></div></td>
+                    <td><div class="td-inner"><input type="text" placeholder="Ex: Pix"></div></td>
                 </tr>
                 <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="proc-desc" oninput="atualizarTermo()"></td>
-                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
-                    <td><input type="text"></td>
+                    <td><div class="td-inner"><input type="date" class="proc-data"></div></td>
+                    <td>
+                        <div class="td-inner">
+                            <select class="proc-select" onchange="selecionarProcedimento(this)">
+                                <option value="">Selecione...</option>
+                                <option value="Botox Day (1 área)">Botox Day (1 área)</option>
+                                <option value="Toxina Botulínica (1 área)">Toxina Botulínica (1 área)</option>
+                                <option value="Toxina Botulínica (Full Face)">Toxina Botulínica (Full Face)</option>
+                                <option value="Bioestimulador de Colágeno (1 frasco)">Bioestimulador de Colágeno (1 frasco)</option>
+                                <option value="Radiesse (1 frasco)">Radiesse (1 frasco)</option>
+                                <option value="Sculptra (1 frasco)">Sculptra (1 frasco)</option>
+                                <option value="Microagulhamento (1 ativo)">Microagulhamento (1 ativo)</option>
+                                <option value="Lipoenzima (1 sessão)">Lipoenzima (1 sessão)</option>
+                                <option value="Lipoenzima (Pacote)">Lipoenzima (Pacote)</option>
+                                <option value="Preenchimento Facial (1 ml)">Preenchimento Facial (1 ml)</option>
+                                <option value="Preenchimento Corporal (10 ml)">Preenchimento Corporal (10 ml)</option>
+                                <option value="Preenchimento Íntimo (1 ml)">Preenchimento Íntimo (1 ml)</option>
+                                <option value="Outro">Outro (Digitar)</option>
+                            </select>
+                            <input type="text" class="proc-desc-manual no-print" placeholder="Qual?" style="display:none;" oninput="atualizarTermo()">
+                        </div>
+                    </td>
+                    <td><div class="td-inner"><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></div></td>
+                    <td><div class="td-inner"><input type="text"></div></td>
                 </tr>
                 <tr>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="proc-desc" oninput="atualizarTermo()"></td>
-                    <td><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></td>
-                    <td><input type="text"></td>
+                    <td><div class="td-inner"><input type="date" class="proc-data"></div></td>
+                    <td>
+                        <div class="td-inner">
+                            <select class="proc-select" onchange="selecionarProcedimento(this)">
+                                <option value="">Selecione...</option>
+                                <option value="Botox Day (1 área)">Botox Day (1 área)</option>
+                                <option value="Toxina Botulínica (1 área)">Toxina Botulínica (1 área)</option>
+                                <option value="Toxina Botulínica (Full Face)">Toxina Botulínica (Full Face)</option>
+                                <option value="Bioestimulador de Colágeno (1 frasco)">Bioestimulador de Colágeno (1 frasco)</option>
+                                <option value="Radiesse (1 frasco)">Radiesse (1 frasco)</option>
+                                <option value="Sculptra (1 frasco)">Sculptra (1 frasco)</option>
+                                <option value="Microagulhamento (1 ativo)">Microagulhamento (1 ativo)</option>
+                                <option value="Lipoenzima (1 sessão)">Lipoenzima (1 sessão)</option>
+                                <option value="Lipoenzima (Pacote)">Lipoenzima (Pacote)</option>
+                                <option value="Preenchimento Facial (1 ml)">Preenchimento Facial (1 ml)</option>
+                                <option value="Preenchimento Corporal (10 ml)">Preenchimento Corporal (10 ml)</option>
+                                <option value="Preenchimento Íntimo (1 ml)">Preenchimento Íntimo (1 ml)</option>
+                                <option value="Outro">Outro (Digitar)</option>
+                            </select>
+                            <input type="text" class="proc-desc-manual no-print" placeholder="Qual?" style="display:none;" oninput="atualizarTermo()">
+                        </div>
+                    </td>
+                    <td><div class="td-inner"><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></div></td>
+                    <td><div class="td-inner"><input type="text"></div></td>
                 </tr>
                 <tr class="total-row">
                     <td colspan="2" style="text-align: right;">VALOR TOTAL DO TRATAMENTO:</td>
@@ -219,30 +265,30 @@
                 </tr>
             </tbody>
         </table>
-
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="goToStep(1)">⬅ Voltar</button>
             <button class="btn btn-primary" onclick="goToStep(3)">Próximo ➔</button>
         </div>
     </div>
 
-    <!-- ================= PASSO 3: TERMO DE CONSENTIMENTO ================= -->
+    <!-- PASSO 3 -->
     <div class="step-content" id="step-3">
         <div class="section-title">Termo de Consentimento Livre e Esclarecido</div>
         
         <div class="no-print" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <label style="display:block; margin-bottom:8px;">Selecione o Procedimento Principal (Base do Termo):</label>
-            <select id="termo-select" onchange="atualizarTermo()">
+            <label style="display:block; margin-bottom:8px; color: #1e3a8a; font-weight: bold;">Procedimento Principal (Pré-selecionado pelo Orçamento):</label>
+            <select id="termo-select" onchange="atualizarTermo()" style="background: #eff6ff; font-weight: bold; color: #1d4ed8;">
                 <option value="botox">Toxina Botulínica (Botox)</option>
                 <option value="sculptra">Bioestimulador de Colágeno</option>
                 <option value="preenchimento_facial">Preenchimento Facial</option>
                 <option value="preenchimento_intimo">Preenchimento Íntimo</option>
                 <option value="multiplo">Termo Geral / Múltiplos Procedimentos</option>
             </select>
+            <p style="font-size: 11px; margin-top: 5px; color: #64748b;">*Se desejar, você pode alterar o termo manualmente acima.</p>
         </div>
 
         <div id="termo-texto" style="font-size: 14px; color: #334155; line-height: 1.6; text-align: justify; margin-bottom: 20px;">
-            <!-- O texto gerado automaticamente entra aqui -->
+            <!-- O texto entra aqui -->
         </div>
 
         <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
@@ -252,7 +298,6 @@
             </label>
         </div>
 
-        <!-- ASSINATURA DO TERMO (APENAS PACIENTE AQUI) -->
         <div>
             <div class="signatures-grid">
                 <div class="sig-box" style="margin: 0 auto; max-width: 400px;">
@@ -277,15 +322,13 @@
         </div>
     </div>
 
-    <!-- ================= PASSO 4: EXECUÇÃO (MAPA, FOTO E ASSINATURA FINAL) ================= -->
+    <!-- PASSO 4 -->
     <div class="step-content" id="step-4">
-        
         <div class="no-print" style="margin-bottom: 25px; background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; font-size: 14px; text-align: center;">
             <strong>Atenção Profissional:</strong> Realize a marcação física no paciente, registre a foto e mapeie as doses abaixo.
         </div>
 
         <div class="section-title">Registro Clínico de Execução</div>
-        
         <div class="toolbar no-print">
             <div>
                 <label style="display:block; font-size:12px; font-weight:600; color:#64748b; margin-bottom:5px;">Produto / Legenda</label>
@@ -320,13 +363,11 @@
             </div>
         </div>
 
-        <!-- ASSINATURAS DO PRONTUÁRIO (VALIDANDO A EXECUÇÃO) -->
         <div style="margin-top: 40px;">
             <div class="section-title">Validação do Prontuário Médico</div>
             <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 15px;">Atesto que o procedimento planejado foi realizado conforme os registros visuais (fotografia e mapeamento de doses) apresentados acima.</p>
             
             <div class="signatures-grid">
-                <!-- Paciente -->
                 <div class="sig-box">
                     <div class="sig-canvas-container">
                         <canvas id="sigCanvasProntuario" class="sig-canvas"></canvas>
@@ -338,10 +379,8 @@
                     <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxProntuario, sigCanvasProntuario)" style="margin-top: 15px; width: 100%;">Limpar Assinatura</button>
                 </div>
 
-                <!-- Profissional -->
                 <div class="sig-box">
                     <div class="dr-sig-container">
-                        <!-- Imagem da assinatura do Doutor -->
                         <img src="assinatura.png" alt="Assinatura Dr." class="dr-sig-img" onerror="this.style.display='none'">
                     </div>
                     <div class="sig-line">
@@ -364,36 +403,91 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
-    // --- DATAS AUTOMÁTICAS ---
+    // --- DATAS E TABELA AUTOMÁTICAS ---
     document.getElementById('data_prontuario').valueAsDate = new Date();
     document.getElementById('data_termo').valueAsDate = new Date();
+    document.querySelectorAll('.proc-data').forEach(input => {
+        input.valueAsDate = new Date();
+    });
 
-    // --- NAVEGAÇÃO ENTRE PASSOS ---
+    // Banco de Dados Interno de Procedimentos e Termos
+    const dbProcedimentos = {
+        "Botox Day (1 área)": { valor: 799.90, tcle: "botox" },
+        "Toxina Botulínica (1 área)": { valor: 299.00, tcle: "botox" },
+        "Toxina Botulínica (Full Face)": { valor: 1200.00, tcle: "botox" },
+        "Bioestimulador de Colágeno (1 frasco)": { valor: 899.00, tcle: "sculptra" },
+        "Radiesse (1 frasco)": { valor: 1200.00, tcle: "sculptra" },
+        "Sculptra (1 frasco)": { valor: 2000.00, tcle: "sculptra" },
+        "Microagulhamento (1 ativo)": { valor: 349.90, tcle: "multiplo" },
+        "Lipoenzima (1 sessão)": { valor: 350.00, tcle: "multiplo" },
+        "Lipoenzima (Pacote)": { valor: 1200.00, tcle: "multiplo" },
+        "Preenchimento Facial (1 ml)": { valor: 350.00, tcle: "preenchimento_facial" },
+        "Preenchimento Corporal (10 ml)": { valor: 1800.00, tcle: "multiplo" },
+        "Preenchimento Íntimo (1 ml)": { valor: 500.00, tcle: "preenchimento_intimo" },
+        "Outro": { valor: 0.00, tcle: "multiplo" }
+    };
+
+    function selecionarProcedimento(selectObj) {
+        const row = selectObj.closest('tr');
+        const manualInput = row.querySelector('.proc-desc-manual');
+        const valInput = row.querySelector('.proc-val');
+        const selectedValue = selectObj.value;
+
+        if (selectedValue === "Outro") {
+            manualInput.style.display = "block";
+            valInput.value = "";
+        } else if (selectedValue !== "") {
+            manualInput.style.display = "none";
+            manualInput.value = ""; 
+            valInput.value = dbProcedimentos[selectedValue].valor.toFixed(2);
+        } else {
+            manualInput.style.display = "none";
+            manualInput.value = "";
+            valInput.value = "";
+        }
+        
+        calcularTotal();
+        atualizarTCLEInteligente();
+    }
+
+    function atualizarTCLEInteligente() {
+        let termosEncontrados = new Set();
+        document.querySelectorAll('.proc-select').forEach(select => {
+            if (select.value && select.value !== "Outro") {
+                termosEncontrados.add(dbProcedimentos[select.value].tcle);
+            }
+        });
+
+        const termoDropdown = document.getElementById('termo-select');
+        
+        if (termosEncontrados.size === 1) {
+            // Se tem apenas 1 tipo de procedimento, escolhe o termo dele
+            termoDropdown.value = Array.from(termosEncontrados)[0];
+        } else if (termosEncontrados.size > 1) {
+            // Se misturou toxina com preenchimento, etc, joga pro Múltiplo
+            termoDropdown.value = "multiplo";
+        }
+        
+        atualizarTermo();
+    }
+
+    // --- NAVEGAÇÃO ---
     function goToStep(step) {
         document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.step-dot').forEach(el => el.classList.remove('active'));
         document.getElementById('step-' + step).classList.add('active');
         
-        for(let i = 1; i <= step; i++) {
-            document.getElementById('dot-' + i).classList.add('active');
-        }
+        for(let i = 1; i <= step; i++) document.getElementById('dot-' + i).classList.add('active');
 
-        if (step === 3) { 
-            atualizarTermo(); 
-            setTimeout(() => initSignature(sigCanvasTermo, sigCtxTermo), 50); 
-        }
-        if (step === 4) { 
-            setTimeout(resizeMap, 50); 
-            setTimeout(() => initSignature(sigCanvasProntuario, sigCtxProntuario), 50); 
-        }
+        if (step === 3) { atualizarTermo(); setTimeout(() => initSignature(sigCanvasTermo, sigCtxTermo), 50); }
+        if (step === 4) { setTimeout(resizeMap, 50); setTimeout(() => initSignature(sigCanvasProntuario, sigCtxProntuario), 50); }
         window.scrollTo(0, 0);
     }
 
-    // --- CÁLCULO FINANCEIRO (PASSO 2) ---
+    // --- CÁLCULO FINANCEIRO ---
     let totalValor = 0;
     function calcularTotal() {
         totalValor = 0;
@@ -405,7 +499,7 @@
         atualizarTermo();
     }
 
-    // --- GERAÇÃO DO TERMO E INJEÇÃO DOS DADOS (PASSO 3) ---
+    // --- GERAÇÃO DO TERMO ---
     const termsDB = {
         botox: "autorizo a aplicação de <strong>Toxina Botulínica</strong>. Fui informado(a) de que a ação causa um relaxamento muscular temporário, com efeito pleno se estabelecendo de forma progressiva em até 15 dias, e duração média de 3 a 6 meses conforme meu metabolismo individual. Fui esclarecido(a) sobre a possibilidade, embora rara, de assimetria facial transitória, ptose (queda) palpebral ou de sobrancelha, e resposta variável conforme minha biologia individual. Comprometo-me a não deitar, não abaixar a cabeça, não massagear a região tratada e não praticar atividades físicas intensas nas primeiras 4 a 24 horas.",
         sculptra: "autorizo o tratamento com <strong>Bioestimuladores de Colágeno</strong>. Compreendo que os resultados são graduais e dependem diretamente da minha resposta biológica individual de produção de colágeno, não sendo imediatos. Fui informado(a) sobre a possibilidade de formação de nódulos palpáveis (pápulas) ou, em casos excepcionais, granulomas, além de reação inflamatória local. Comprometo-me expressamente a realizar as massagens vigorosas na área tratada (regra dos 5 minutos, 5 vezes ao dia, por 5 dias), medida fundamental para a distribuição adequada do produto e prevenção de nodulações.",
@@ -425,17 +519,25 @@
         document.querySelectorAll('.dynamic-cpf').forEach(el => el.innerText = cpf);
 
         let listaProcs = [];
-        document.querySelectorAll('.proc-desc').forEach(input => {
-            if(input.value.trim() !== '') listaProcs.push(input.value.trim());
+        // Pega as opções do dropdown e/ou os campos digitados
+        document.querySelectorAll('.proc-select').forEach(select => {
+            if (select.value === "Outro") {
+                const manual = select.closest('.td-inner').querySelector('.proc-desc-manual').value.trim();
+                if (manual) listaProcs.push(manual);
+            } else if (select.value !== "") {
+                listaProcs.push(select.value);
+            }
         });
-        let descProcs = listaProcs.length > 0 ? listaProcs.join(', ') : "Conforme descrito na tabela de orçamento";
+        
+        let descProcs = listaProcs.length > 0 ? listaProcs.join('<br> • ') : "Conforme descrito na tabela de orçamento";
+        if (listaProcs.length > 0) descProcs = "• " + descProcs; // bullet point inicial
 
         let textoFinal = `
             <p>Eu, <strong>${nome.toUpperCase()}</strong>, inscrito(a) no CPF sob o nº <strong>${cpf}</strong>, de forma livre e esclarecida, ${termsDB[tipoTermo]}</p>
             <p>Fui devidamente informado(a) sobre as indicações, contraindicações, riscos inerentes (como inchaço, vermelhidão e pequenos hematomas transitórios) e todos os cuidados pós-procedimento necessários para o sucesso do tratamento.</p>
             <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 20px;">
                 <p style="margin: 0 0 10px 0;"><strong>Resumo dos Procedimentos a serem realizados:</strong><br>${descProcs}</p>
-                <p style="margin: 0;"><strong>Valor Total Acordado:</strong> R$ ${totalValor.toFixed(2).replace('.', ',')}</p>
+                <p style="margin: 0; padding-top: 10px; border-top: 1px dashed #cbd5e1;"><strong>Valor Total Acordado:</strong> R$ ${totalValor.toFixed(2).replace('.', ',')}</p>
             </div>
             <p style="margin-top: 20px;">Declaro ter lido, compreendido e concordado com todas as informações constantes neste termo e no orçamento apresentado.</p>
             ${lgpdClause}
@@ -451,7 +553,7 @@
         goToStep(4);
     }
 
-    // --- LÓGICA DO MAPA FACIAL (PASSO 4) ---
+    // --- LÓGICA DO MAPA FACIAL ---
     const mapCanvas = document.getElementById('mapCanvas');
     const mapCtx = mapCanvas.getContext('2d');
     const mapContainer = document.querySelector('.canvas-container');
@@ -487,7 +589,7 @@
 
     function clearMap() { if(confirm("Apagar desenho?")) mapCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height); }
 
-    // --- CÂMERA E FOTO (PASSO 4) ---
+    // --- CÂMERA E FOTO ---
     const cameraInput = document.getElementById('camera-input');
     const photoDisplay = document.getElementById('photo-display');
     const patientPhoto = document.getElementById('patient-photo');
@@ -507,7 +609,7 @@
     });
     function removerFoto() { patientPhoto.src = ""; photoDisplay.style.display = 'none'; btnRemover.style.display = 'none'; cameraInput.value = ""; }
 
-    // --- SISTEMA DE ASSINATURAS (REUTILIZÁVEL) ---
+    // --- SISTEMA DE ASSINATURAS ---
     const sigCanvasTermo = document.getElementById('sigCanvasTermo');
     const sigCtxTermo = sigCanvasTermo.getContext('2d');
     const sigCanvasProntuario = document.getElementById('sigCanvasProntuario');
@@ -547,15 +649,13 @@
         }
     });
 
-    // --- INTEGRAÇÃO COM BANCO DE DADOS (NOTION VIA WEBHOOK) ---
+    // --- INTEGRAÇÃO MAKE.COM E NOTION ---
     function enviarParaBanco() {
         const webhookUrl = "https://hook.us2.make.com/c17oy5srcb88bejxolk8vvu3y9k3u6pa"; 
 
-        // Captura o nome do procedimento selecionado (Texto ao invés do valor 'botox')
         const procedimentoSelect = document.getElementById('termo-select');
         const procedimentoNome = procedimentoSelect.options[procedimentoSelect.selectedIndex].text;
 
-        // Pacote completo atualizado com WhatsApp e Procedimento
         const dadosPaciente = {
             nome: document.getElementById('client-name').value.trim(),
             cpf: document.getElementById('client-cpf').value.trim(),
@@ -571,24 +671,20 @@
             body: JSON.stringify(dadosPaciente)
         })
         .then(response => {
-            if (!response.ok) {
-                console.log("Aviso de comunicação com o Make. Verifique a URL do Webhook.");
-            }
+            if (!response.ok) console.log("Aviso de comunicação com o Make. Verifique a URL do Webhook.");
         })
-        .catch(error => {
-            console.log("Erro no envio em segundo plano: " + error.message);
-        });
+        .catch(error => console.log("Erro no envio em segundo plano: " + error.message));
     }
 
-    // --- FINALIZAÇÃO DO CADASTRO (CONFIRMAÇÃO + SALVAMENTO) ---
+    // --- FINALIZAÇÃO E IMPRESSÃO ---
     function finalizarCadastro() {
         const nome = document.getElementById('client-name').value.trim() || "Paciente";
         enviarParaBanco();
-        alert(`✓ Cadastro concluído com sucesso\n\nObrigado(a), ${nome}.\n\nSeus dados foram registrados com segurança em nosso prontuário clínico digital. Em breve, nossa equipe entrará em contato para confirmar os detalhes do seu atendimento na Av. Paulista, 2202.`);
+        alert(`✓ Cadastro concluído com sucesso\n\nObrigado(a), ${nome}.\n\nSeus dados foram registrados com segurança em nosso prontuário clínico digital. Em breve, nossa equipe entrará em contato para confirmar os detalhes do seu atendimento na Av. Paulista, 2202, Conjunto 73.`);
         window.print();
     }
 
-    // --- GERAÇÃO DE MENSAGEM E ENVIO PARA WHATSAPP ---
+    // --- WHATSAPP ---
     function enviarWhatsApp() {
         const nome = document.getElementById('client-name').value.trim() || "Paciente";
         let telefone = document.getElementById('client-phone').value.trim();
@@ -600,9 +696,7 @@
             return;
         }
         
-        if (!telefone.startsWith('55')) {
-            telefone = '55' + telefone;
-        }
+        if (!telefone.startsWith('55')) telefone = '55' + telefone;
 
         const mensagem = `Olá, ${nome}! Aqui é da clínica do Dr. Phelipe Aquino (Av. Paulista, 2202).\n\nFoi um prazer receber você! Estou enviando em anexo o seu prontuário digital com o resumo do nosso planejamento clínico e os cuidados que conversamos.\n\nQualquer dúvida, estou à disposição!`;
         
