@@ -171,6 +171,9 @@
             <div class="form-group"><label>Está gestante?</label>
                 <div class="radio-group"><label class="radio-item"><input type="radio" name="gravida"> Sim</label> <label class="radio-item"><input type="radio" name="gravida"> Não</label></div>
             </div>
+            <div class="form-group"><label>Está amamentando?</label>
+                <div class="radio-group"><label class="radio-item"><input type="radio" name="amamentando"> Sim</label> <label class="radio-item"><input type="radio" name="amamentando"> Não</label></div>
+            </div>
         </div>
 
         <div class="nav-buttons">
@@ -242,6 +245,13 @@
             <!-- O texto gerado automaticamente entra aqui -->
         </div>
 
+        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+            <label class="radio-item" style="align-items: flex-start; gap: 10px; cursor: pointer;">
+                <input type="checkbox" id="consent-imagem" style="width: auto; margin-top: 3px; accent-color: #1d4ed8; transform: scale(1.1);">
+                <span style="font-size: 13px; color: #334155; text-align: justify;"><strong>Registro Fotográfico:</strong> Autorizo a captura e o arquivamento de imagens da região tratada (antes, durante e após o procedimento) para compor exclusivamente meu prontuário clínico e avaliação evolutiva.</span>
+            </label>
+        </div>
+
         <!-- ASSINATURA DO TERMO (APENAS PACIENTE AQUI) -->
         <div>
             <div class="signatures-grid">
@@ -263,7 +273,7 @@
 
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="goToStep(2)">⬅ Voltar</button>
-            <button class="btn btn-primary" onclick="goToStep(4)">Próximo ➔</button>
+            <button class="btn btn-primary" onclick="avancarDoTermo()">Próximo ➔</button>
         </div>
     </div>
 
@@ -350,7 +360,7 @@
             <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
                 <button class="btn btn-blue" onclick="enviarWhatsApp()">💬 WhatsApp + Imprimir</button>
-                <button class="btn btn-primary" onclick="enviarParaBanco(); window.print()">Finalizar e Salvar no Notion</button>
+                <button class="btn btn-primary" onclick="finalizarCadastro()">Finalizar e Salvar no Notion</button>
             </div>
         </div>
     </div>
@@ -397,12 +407,14 @@
 
     // --- GERAÇÃO DO TERMO E INJEÇÃO DOS DADOS (PASSO 3) ---
     const termsDB = {
-        botox: "autorizo a aplicação de <strong>Toxina Botulínica</strong>. Fui informado(a) de que a ação causa um relaxamento muscular temporário. Comprometo-me a não deitar, não abaixar a cabeça, não massagear a região tratada e não praticar atividades físicas intensas nas primeiras 4 a 24 horas.",
-        sculptra: "autorizo o tratamento com <strong>Bioestimuladores de Colágeno</strong>. Compreendo que os resultados são graduais. Comprometo-me expressamente a realizar as massagens vigorosas na área tratada (regra dos 5 minutos, 5 vezes ao dia, por 5 dias), sob pena de elevação do risco de nódulos.",
-        preenchimento_facial: "dou o meu consentimento para o procedimento de <strong>Preenchimento Facial</strong> com ácido hialurônico. Assumo a responsabilidade de não massagear o local preenchido por conta própria e evitar exposição ao calor extremo ou sol nas primeiras 48 horas.",
-        preenchimento_intimo: "autorizo o procedimento de <strong>Preenchimento Íntimo</strong>. Comprometo-me a seguir rigorosamente os cuidados: abster-me de relações sexuais com atrito pelo período recomendado, evitar o uso de roupas apertadas e manter rigorosa higiene local.",
-        multiplo: "autorizo a realização dos procedimentos estéticos e terapêuticos discriminados no planejamento clínico acima. Declaro ter recebido todas as orientações referentes aos cuidados pós-procedimento específicos de cada aplicação."
+        botox: "autorizo a aplicação de <strong>Toxina Botulínica</strong>. Fui informado(a) de que a ação causa um relaxamento muscular temporário, com efeito pleno se estabelecendo de forma progressiva em até 15 dias, e duração média de 3 a 6 meses conforme meu metabolismo individual. Fui esclarecido(a) sobre a possibilidade, embora rara, de assimetria facial transitória, ptose (queda) palpebral ou de sobrancelha, e resposta variável conforme minha biologia individual. Comprometo-me a não deitar, não abaixar a cabeça, não massagear a região tratada e não praticar atividades físicas intensas nas primeiras 4 a 24 horas.",
+        sculptra: "autorizo o tratamento com <strong>Bioestimuladores de Colágeno</strong>. Compreendo que os resultados são graduais e dependem diretamente da minha resposta biológica individual de produção de colágeno, não sendo imediatos. Fui informado(a) sobre a possibilidade de formação de nódulos palpáveis (pápulas) ou, em casos excepcionais, granulomas, além de reação inflamatória local. Comprometo-me expressamente a realizar as massagens vigorosas na área tratada (regra dos 5 minutos, 5 vezes ao dia, por 5 dias), medida fundamental para a distribuição adequada do produto e prevenção de nodulações.",
+        preenchimento_facial: "dou o meu consentimento para o procedimento de <strong>Preenchimento Facial</strong> com ácido hialurônico. Fui esclarecido(a) sobre a possibilidade, em casos raros, de assimetrias temporárias, efeito Tyndall (leve coloração azulada sob a pele) ou migração do produto, e sobre o risco extremamente raro, porém grave, de oclusão vascular, estando o profissional tecnicamente preparado para identificar e conduzir eventuais intercorrências. Assumo a responsabilidade de não massagear o local preenchido por conta própria e evitar exposição ao calor extremo ou sol nas primeiras 48 horas.",
+        preenchimento_intimo: "autorizo o procedimento de <strong>Preenchimento Íntimo</strong>. Fui informado(a) de que, por envolver tecido de maior sensibilidade e vascularização específica, o procedimento pode apresentar edema mais pronunciado e prolongado, equimoses (hematomas) e desconforto temporário, além do risco raro de assimetria ou necessidade de complementação em sessão posterior. Comprometo-me a seguir rigorosamente os cuidados: abster-me de relações sexuais com atrito pelo período recomendado, evitar o uso de roupas apertadas e manter rigorosa higiene local.",
+        multiplo: "autorizo a realização dos procedimentos estéticos e terapêuticos discriminados no planejamento clínico acima. Fui esclarecido(a) de que, por se tratar de combinação de mais de um procedimento na mesma sessão ou em sessões próximas, os efeitos temporários esperados podem se apresentar de forma mais acentuada e com tempo de recuperação levemente ampliado. Declaro ter recebido todas as orientações referentes aos riscos e cuidados pós-procedimento específicos de cada aplicação."
     };
+
+    const lgpdClause = `<p style="margin-top: 20px;"><strong>Tratamento de Dados Pessoais (LGPD):</strong> Os dados pessoais e de saúde aqui coletados (incluindo CPF, histórico clínico e registros fotográficos) serão tratados com finalidade exclusivamente clínica e de acompanhamento terapêutico, mantidos sob sigilo profissional nos termos da Lei nº 13.709/2018 (LGPD). Poderei, a qualquer momento, solicitar acesso, correção ou exclusão desses dados mediante contato direto com a clínica.</p>`;
 
     function atualizarTermo() {
         const nome = document.getElementById('client-name').value.trim() || "NOME DO PACIENTE";
@@ -426,8 +438,17 @@
                 <p style="margin: 0;"><strong>Valor Total Acordado:</strong> R$ ${totalValor.toFixed(2).replace('.', ',')}</p>
             </div>
             <p style="margin-top: 20px;">Declaro ter lido, compreendido e concordado com todas as informações constantes neste termo e no orçamento apresentado.</p>
+            ${lgpdClause}
         `;
         document.getElementById('termo-texto').innerHTML = textoFinal;
+    }
+
+    function avancarDoTermo() {
+        if (!document.getElementById('consent-imagem').checked) {
+            alert("Por favor, confirme a autorização de registro fotográfico antes de prosseguir.");
+            return;
+        }
+        goToStep(4);
     }
 
     // --- LÓGICA DO MAPA FACIAL (PASSO 4) ---
@@ -557,6 +578,14 @@
         .catch(error => {
             console.log("Erro no envio em segundo plano: " + error.message);
         });
+    }
+
+    // --- FINALIZAÇÃO DO CADASTRO (CONFIRMAÇÃO + SALVAMENTO) ---
+    function finalizarCadastro() {
+        const nome = document.getElementById('client-name').value.trim() || "Paciente";
+        enviarParaBanco();
+        alert(`✓ Cadastro concluído com sucesso\n\nObrigado(a), ${nome}.\n\nSeus dados foram registrados com segurança em nosso prontuário clínico digital. Em breve, nossa equipe entrará em contato para confirmar os detalhes do seu atendimento na Av. Paulista, 2202.`);
+        window.print();
     }
 
     // --- GERAÇÃO DE MENSAGEM E ENVIO PARA WHATSAPP ---
