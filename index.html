@@ -36,7 +36,16 @@
         .radio-item { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; color: #334155; }
         input[type="radio"], input[type="checkbox"] { width: auto; accent-color: #1d4ed8; transform: scale(1.1); }
 
-        /* Tabela Financeiro */
+        .toolbar { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; }
+        .clinical-records { display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; width: 100%; justify-content: space-between; }
+        .canvas-wrapper, .photo-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
+        .canvas-container { position: relative; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; width: 100%; aspect-ratio: 3 / 4; margin: 0 auto; }
+        .face-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0.5; pointer-events: none; }
+        #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
+        .photo-container { display: none; background: white; border-radius: 12px; padding: 10px; border: 1px dashed #94a3b8; width: 100%; aspect-ratio: 3 / 4; align-items: center; justify-content: center; margin: 0 auto; }
+        .photo-container img { max-width: 100%; max-height: 100%; border-radius: 6px; object-fit: contain; }
+
+        /* Tabela Financeiro Atualizada */
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
         th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #475569; border: 1px solid #e2e8f0; text-transform: uppercase; font-weight: 700; }
         td { border: 1px solid #e2e8f0; padding: 0; overflow: visible; vertical-align: top; }
@@ -47,7 +56,6 @@
         .total-row { background: #f8fafc; font-weight: bold; color: #1e3a8a; }
         .total-row td { padding: 12px; border: 1px solid #e2e8f0; }
 
-        /* Assinaturas */
         .signatures-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; }
         .sig-box { flex: 1; min-width: 250px; text-align: center; }
         .sig-canvas-container { border: 1px dashed #94a3b8; border-radius: 8px; background: #f8fafc; height: 160px; position: relative; margin-bottom: 10px; transition: 0.2s; }
@@ -73,12 +81,15 @@
         @media print {
             body { background: white; padding: 0; margin: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; overflow: hidden; }
-            .stepper, .nav-buttons, .no-print, .btn-limpar-sig { display: none !important; }
+            .stepper, .nav-buttons, .toolbar, .no-print, #btn-remover-foto, .btn-limpar-sig { display: none !important; }
             .step-content { display: block !important; opacity: 1 !important; transform: none !important; }
-            #step-2, #step-3 { page-break-before: always; padding-top: 20px; }
+            #step-2, #step-3, #step-4 { page-break-before: always; padding-top: 20px; }
             input, textarea, select { border: none; background: transparent; padding: 0; font-size: 13px; color: #000; resize: none; -webkit-appearance: none; box-shadow: none !important; }
             .form-group { border-bottom: 1px dotted #cbd5e1; padding-bottom: 4px; margin-bottom: 12px; }
             .radio-group { padding: 0; }
+            .clinical-records { flex-direction: row; flex-wrap: nowrap; gap: 4%; }
+            .canvas-wrapper, .photo-wrapper { width: 48%; min-width: auto; flex: none; }
+            .canvas-container, .photo-container { border: none; box-shadow: none; display: flex !important; }
             table { width: 100% !important; table-layout: fixed; }
             table, th, td { border: 1px solid #000 !important; word-break: break-word; }
             td input, td select { font-size: 12px; padding: 6px !important; width: 100% !important; box-sizing: border-box; }
@@ -96,14 +107,14 @@
         <p>Estética e Rejuvenescimento | CRBM 39219</p>
     </div>
 
-    <!-- Indicador Visual (3 passos) -->
     <div class="stepper no-print">
         <div class="step-dot active" id="dot-1">1. Admissão</div>
         <div class="step-dot" id="dot-2">2. Orçamento</div>
-        <div class="step-dot" id="dot-3">3. Termo e Assinaturas</div>
+        <div class="step-dot" id="dot-3">3. Consentimento</div>
+        <div class="step-dot" id="dot-4">4. Prontuário Final</div>
     </div>
 
-    <!-- PASSO 1: ADMISSÃO -->
+    <!-- PASSO 1 -->
     <div class="step-content active" id="step-1">
         <div class="section-title">Dados Pessoais</div>
         <div class="form-row">
@@ -156,7 +167,7 @@
         </div>
     </div>
 
-    <!-- PASSO 2: ORÇAMENTO -->
+    <!-- PASSO 2 -->
     <div class="step-content" id="step-2">
         <div class="section-title">Planejamento e Orçamento Automático</div>
         <table>
@@ -169,7 +180,7 @@
                 </tr>
             </thead>
             <tbody id="tabela-orcamento">
-                <!-- Linha 1 -->
+                <!-- As 3 linhas padrão -->
                 <tr>
                     <td><div class="td-inner"><input type="date" class="proc-data"></div></td>
                     <td>
@@ -194,20 +205,8 @@
                         </div>
                     </td>
                     <td><div class="td-inner"><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></div></td>
-                    <td>
-                        <div class="td-inner">
-                            <select class="proc-pagto">
-                                <option value="">Selecione...</option>
-                                <option value="Pix | Transferência">Pix | Transferência</option>
-                                <option value="Cartão à vista">Cartão à vista</option>
-                                <option value="Cartão 1x">Cartão 1x</option>
-                                <option value="Cartão 2x">Cartão 2x</option>
-                                <option value="Cartão 3x">Cartão 3x</option>
-                            </select>
-                        </div>
-                    </td>
+                    <td><div class="td-inner"><input type="text" placeholder="Ex: Pix"></div></td>
                 </tr>
-                <!-- Linha 2 -->
                 <tr>
                     <td><div class="td-inner"><input type="date" class="proc-data"></div></td>
                     <td>
@@ -232,20 +231,8 @@
                         </div>
                     </td>
                     <td><div class="td-inner"><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></div></td>
-                    <td>
-                        <div class="td-inner">
-                            <select class="proc-pagto">
-                                <option value="">Selecione...</option>
-                                <option value="Pix | Transferência">Pix | Transferência</option>
-                                <option value="Cartão à vista">Cartão à vista</option>
-                                <option value="Cartão 1x">Cartão 1x</option>
-                                <option value="Cartão 2x">Cartão 2x</option>
-                                <option value="Cartão 3x">Cartão 3x</option>
-                            </select>
-                        </div>
-                    </td>
+                    <td><div class="td-inner"><input type="text"></div></td>
                 </tr>
-                <!-- Linha 3 -->
                 <tr>
                     <td><div class="td-inner"><input type="date" class="proc-data"></div></td>
                     <td>
@@ -270,18 +257,7 @@
                         </div>
                     </td>
                     <td><div class="td-inner"><input type="number" class="proc-val" oninput="calcularTotal()" placeholder="0.00"></div></td>
-                    <td>
-                        <div class="td-inner">
-                            <select class="proc-pagto">
-                                <option value="">Selecione...</option>
-                                <option value="Pix | Transferência">Pix | Transferência</option>
-                                <option value="Cartão à vista">Cartão à vista</option>
-                                <option value="Cartão 1x">Cartão 1x</option>
-                                <option value="Cartão 2x">Cartão 2x</option>
-                                <option value="Cartão 3x">Cartão 3x</option>
-                            </select>
-                        </div>
-                    </td>
+                    <td><div class="td-inner"><input type="text"></div></td>
                 </tr>
                 <tr class="total-row">
                     <td colspan="2" style="text-align: right;">VALOR TOTAL DO TRATAMENTO:</td>
@@ -295,7 +271,7 @@
         </div>
     </div>
 
-    <!-- PASSO 3: TERMO E ASSINATURAS FINAIS -->
+    <!-- PASSO 3 -->
     <div class="step-content" id="step-3">
         <div class="section-title">Termo de Consentimento Livre e Esclarecido</div>
         
@@ -306,50 +282,121 @@
                 <option value="sculptra">Bioestimulador de Colágeno</option>
                 <option value="preenchimento_facial">Preenchimento Facial</option>
                 <option value="preenchimento_intimo">Preenchimento Íntimo</option>
-                <option value="lipoenzima">Lipoenzimática (Gordura Localizada)</option>
                 <option value="multiplo">Termo Geral / Múltiplos Procedimentos</option>
             </select>
             <p style="font-size: 11px; margin-top: 5px; color: #64748b;">*Se desejar, você pode alterar o termo manualmente acima.</p>
         </div>
 
-        <div id="termo-texto" style="font-size: 14px; color: #334155; line-height: 1.6; text-align: justify; margin-bottom: 30px;">
-            <!-- O texto do TCLE entra aqui -->
+        <div id="termo-texto" style="font-size: 14px; color: #334155; line-height: 1.6; text-align: justify; margin-bottom: 20px;">
+            <!-- O texto entra aqui -->
         </div>
 
-        <div class="section-title">Validação e Assinaturas</div>
-        <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 15px;">Declaro, por meio da assinatura abaixo, ter sido plenamente orientado(a) e concordo com todos os termos descritos acima.</p>
-
-        <div class="signatures-grid">
-            <!-- Assinatura do Paciente -->
-            <div class="sig-box">
-                <div class="sig-canvas-container">
-                    <canvas id="sigCanvasPaciente" class="sig-canvas"></canvas>
-                </div>
-                <div class="sig-line">
-                    <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
-                    <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
-                </div>
-                <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxPaciente, sigCanvasPaciente)" style="margin-top: 15px; width: 100%;">Limpar Assinatura</button>
-            </div>
-
-            <!-- Assinatura do Profissional -->
-            <div class="sig-box">
-                <div class="dr-sig-container">
-                    <img src="assinatura.png" alt="Assinatura Dr." class="dr-sig-img" onerror="this.style.display='none'">
-                </div>
-                <div class="sig-line">
-                    <strong>Dr. Francisco Phelipe de Aquino Costa</strong><br>
-                    <span>Biomédico Esteta - CRBM 39219</span>
-                </div>
-            </div>
+        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+            <label class="radio-item" style="align-items: flex-start; gap: 10px; cursor: pointer;">
+                <input type="checkbox" id="consent-imagem" style="width: auto; margin-top: 3px; accent-color: #1d4ed8; transform: scale(1.1);">
+                <span style="font-size: 13px; color: #334155; text-align: justify;"><strong>Registro Fotográfico:</strong> Autorizo a captura e o arquivamento de imagens da região tratada (antes, durante e após o procedimento) para compor exclusivamente meu prontuário clínico e avaliação evolutiva.</span>
+            </label>
         </div>
 
-        <div class="date-centered">
-            Data do Aceite: <input type="date" id="data_termo">
+        <div>
+            <div class="signatures-grid">
+                <div class="sig-box" style="margin: 0 auto; max-width: 400px;">
+                    <div class="sig-canvas-container">
+                        <canvas id="sigCanvasTermo" class="sig-canvas"></canvas>
+                    </div>
+                    <div class="sig-line">
+                        <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
+                        <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
+                    </div>
+                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxTermo, sigCanvasTermo)" style="margin-top: 15px; width: 100%;">Limpar Assinatura</button>
+                </div>
+            </div>
+            <div class="date-centered">
+                Data do Aceite: <input type="date" id="data_termo">
+            </div>
         </div>
 
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="goToStep(2)">⬅ Voltar</button>
+            <button class="btn btn-primary" onclick="avancarDoTermo()">Próximo ➔</button>
+        </div>
+    </div>
+
+    <!-- PASSO 4 -->
+    <div class="step-content" id="step-4">
+        <div class="no-print" style="margin-bottom: 25px; background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; font-size: 14px; text-align: center;">
+            <strong>Atenção Profissional:</strong> Realize a marcação física no paciente, registre a foto e mapeie as doses abaixo.
+        </div>
+
+        <div class="section-title">Registro Clínico de Execução</div>
+        <div class="toolbar no-print">
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#64748b; margin-bottom:5px;">Produto / Legenda</label>
+                <select id="color-select" style="width: 220px;">
+                    <option value="#3b82f6">Toxina Botulínica (Azul)</option>
+                    <option value="#ec4899">Bioestimulador (Rosa)</option>
+                    <option value="#10b981">Preenchedor (Verde)</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                <label for="camera-input" class="btn btn-blue" style="margin: 0; padding: 10px 16px;">📸 Foto do Planejamento</label>
+                <button class="btn btn-secondary" style="padding: 10px 16px;" onclick="clearMap()">Limpar Mapa</button>
+            </div>
+        </div>
+
+        <div class="clinical-records">
+            <div class="canvas-wrapper">
+                <label style="font-weight: 700; color: #1e3a8a; margin-bottom: 10px; display: block; text-align: center;">Mapa de Doses</label>
+                <div class="canvas-container">
+                    <img src="rosto.png" alt="Mapa Facial" class="face-bg" onerror="this.style.display='none'">
+                    <canvas id="mapCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="photo-wrapper">
+                <label style="font-weight: 700; color: #1e3a8a; margin-bottom: 10px; display: block; text-align: center;">Evidência Física (Marcação)</label>
+                <div class="photo-container" id="photo-display">
+                    <img id="patient-photo" src="" alt="Foto do Paciente">
+                </div>
+                <button id="btn-remover-foto" class="btn btn-secondary no-print" onclick="removerFoto()" style="display: none; margin-top: 10px; width: 100%;">Remover Foto</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <div class="section-title">Validação do Prontuário Médico</div>
+            <p style="font-size: 13px; color: #475569; text-align: justify; margin-bottom: 15px;">Atesto que o procedimento planejado foi realizado conforme os registros visuais (fotografia e mapeamento de doses) apresentados acima.</p>
+            
+            <div class="signatures-grid">
+                <div class="sig-box">
+                    <div class="sig-canvas-container">
+                        <canvas id="sigCanvasProntuario" class="sig-canvas"></canvas>
+                    </div>
+                    <div class="sig-line">
+                        <strong class="dynamic-nome">NOME DO PACIENTE</strong><br>
+                        <span>CPF: <span class="dynamic-cpf">000.000.000-00</span></span>
+                    </div>
+                    <button class="btn btn-secondary no-print btn-limpar-sig" onclick="clearSig(sigCtxProntuario, sigCanvasProntuario)" style="margin-top: 15px; width: 100%;">Limpar Assinatura</button>
+                </div>
+
+                <div class="sig-box">
+                    <div class="dr-sig-container">
+                        <img src="assinatura.png" alt="Assinatura Dr." class="dr-sig-img" onerror="this.style.display='none'">
+                    </div>
+                    <div class="sig-line">
+                        <strong>Dr. Francisco Phelipe de Aquino Costa</strong><br>
+                        <span>Biomédico Esteta - CRBM 39219</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="date-centered">
+                Data da Execução: <input type="date" id="data_prontuario">
+            </div>
+        </div>
+
+        <div class="nav-buttons" style="border-top: none;">
+            <button class="btn btn-secondary" onclick="goToStep(3)">⬅ Voltar</button>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
                 <button class="btn btn-blue" onclick="enviarWhatsApp()">💬 WhatsApp + Imprimir</button>
                 <button class="btn btn-primary" onclick="finalizarCadastro()">Finalizar e Salvar no Notion</button>
@@ -360,6 +407,7 @@
 
 <script>
     // --- DATAS E TABELA AUTOMÁTICAS ---
+    document.getElementById('data_prontuario').valueAsDate = new Date();
     document.getElementById('data_termo').valueAsDate = new Date();
     document.querySelectorAll('.proc-data').forEach(input => {
         input.valueAsDate = new Date();
@@ -374,8 +422,8 @@
         "Radiesse (1 frasco)": { valor: 1200.00, tcle: "sculptra" },
         "Sculptra (1 frasco)": { valor: 2000.00, tcle: "sculptra" },
         "Microagulhamento (1 ativo)": { valor: 349.90, tcle: "multiplo" },
-        "Lipoenzima (1 sessão)": { valor: 350.00, tcle: "lipoenzima" },
-        "Lipoenzima (Pacote)": { valor: 1200.00, tcle: "lipoenzima" },
+        "Lipoenzima (1 sessão)": { valor: 350.00, tcle: "multiplo" },
+        "Lipoenzima (Pacote)": { valor: 1200.00, tcle: "multiplo" },
         "Preenchimento Facial (1 ml)": { valor: 350.00, tcle: "preenchimento_facial" },
         "Preenchimento Corporal (10 ml)": { valor: 1800.00, tcle: "multiplo" },
         "Preenchimento Íntimo (1 ml)": { valor: 500.00, tcle: "preenchimento_intimo" },
@@ -416,8 +464,10 @@
         const termoDropdown = document.getElementById('termo-select');
         
         if (termosEncontrados.size === 1) {
+            // Se tem apenas 1 tipo de procedimento, escolhe o termo dele
             termoDropdown.value = Array.from(termosEncontrados)[0];
         } else if (termosEncontrados.size > 1) {
+            // Se misturou toxina com preenchimento, etc, joga pro Múltiplo
             termoDropdown.value = "multiplo";
         }
         
@@ -432,10 +482,8 @@
         
         for(let i = 1; i <= step; i++) document.getElementById('dot-' + i).classList.add('active');
 
-        if (step === 3) { 
-            atualizarTermo(); 
-            setTimeout(() => initSignature(sigCanvasPaciente, sigCtxPaciente), 50); 
-        }
+        if (step === 3) { atualizarTermo(); setTimeout(() => initSignature(sigCanvasTermo, sigCtxTermo), 50); }
+        if (step === 4) { setTimeout(resizeMap, 50); setTimeout(() => initSignature(sigCanvasProntuario, sigCtxProntuario), 50); }
         window.scrollTo(0, 0);
     }
 
@@ -457,11 +505,10 @@
         sculptra: "autorizo o tratamento com <strong>Bioestimuladores de Colágeno</strong>. Compreendo que os resultados são graduais e dependem diretamente da minha resposta biológica individual de produção de colágeno, não sendo imediatos. Fui informado(a) sobre a possibilidade de formação de nódulos palpáveis (pápulas) ou, em casos excepcionais, granulomas, além de reação inflamatória local. Comprometo-me expressamente a realizar as massagens vigorosas na área tratada (regra dos 5 minutos, 5 vezes ao dia, por 5 dias), medida fundamental para a distribuição adequada do produto e prevenção de nodulações.",
         preenchimento_facial: "dou o meu consentimento para o procedimento de <strong>Preenchimento Facial</strong> com ácido hialurônico. Fui esclarecido(a) sobre a possibilidade, em casos raros, de assimetrias temporárias, efeito Tyndall (leve coloração azulada sob a pele) ou migração do produto, e sobre o risco extremamente raro, porém grave, de oclusão vascular, estando o profissional tecnicamente preparado para identificar e conduzir eventuais intercorrências. Assumo a responsabilidade de não massagear o local preenchido por conta própria e evitar exposição ao calor extremo ou sol nas primeiras 48 horas.",
         preenchimento_intimo: "autorizo o procedimento de <strong>Preenchimento Íntimo</strong>. Fui informado(a) de que, por envolver tecido de maior sensibilidade e vascularização específica, o procedimento pode apresentar edema mais pronunciado e prolongado, equimoses (hematomas) e desconforto temporário, além do risco raro de assimetria ou necessidade de complementação em sessão posterior. Comprometo-me a seguir rigorosamente os cuidados: abster-me de relações sexuais com atrito pelo período recomendado, evitar o uso de roupas apertadas e manter rigorosa higiene local.",
-        lipoenzima: "autorizo o tratamento de <strong>Redução de Gordura Localizada (Lipoenzimática)</strong>. Fui informado(a) de que o procedimento consiste na injeção subcutânea de ativos lipolíticos e que o resultado final depende diretamente do meu metabolismo e dos meus hábitos de vida (alimentação e atividade física). Fui esclarecido(a) sobre a ocorrência esperada de edema (inchaço), eritema (vermelhidão), sensibilidade, pequenos nódulos inflamatórios transitórios e hematomas. Comprometo-me a <strong>não utilizar medicamentos anti-inflamatórios</strong> durante o tratamento (pois inibem o processo de quebra de gordura), evitar exposição solar caso haja hematomas, e ingerir bastante água para auxiliar na eliminação dos lipídios.",
         multiplo: "autorizo a realização dos procedimentos estéticos e terapêuticos discriminados no planejamento clínico acima. Fui esclarecido(a) de que, por se tratar de combinação de mais de um procedimento na mesma sessão ou em sessões próximas, os efeitos temporários esperados podem se apresentar de forma mais acentuada e com tempo de recuperação levemente ampliado. Declaro ter recebido todas as orientações referentes aos riscos e cuidados pós-procedimento específicos de cada aplicação."
     };
 
-    const lgpdClause = `<p style="margin-top: 20px;"><strong>Tratamento de Dados Pessoais (LGPD):</strong> Os dados pessoais e de saúde aqui coletados (incluindo CPF e histórico clínico) serão tratados com finalidade exclusivamente clínica e de acompanhamento terapêutico, mantidos sob sigilo profissional nos termos da Lei nº 13.709/2018 (LGPD). Poderei, a qualquer momento, solicitar acesso, correção ou exclusão desses dados mediante contato direto com a clínica.</p>`;
+    const lgpdClause = `<p style="margin-top: 20px;"><strong>Tratamento de Dados Pessoais (LGPD):</strong> Os dados pessoais e de saúde aqui coletados (incluindo CPF, histórico clínico e registros fotográficos) serão tratados com finalidade exclusivamente clínica e de acompanhamento terapêutico, mantidos sob sigilo profissional nos termos da Lei nº 13.709/2018 (LGPD). Poderei, a qualquer momento, solicitar acesso, correção ou exclusão desses dados mediante contato direto com a clínica.</p>`;
 
     function atualizarTermo() {
         const nome = document.getElementById('client-name').value.trim() || "NOME DO PACIENTE";
@@ -472,6 +519,7 @@
         document.querySelectorAll('.dynamic-cpf').forEach(el => el.innerText = cpf);
 
         let listaProcs = [];
+        // Pega as opções do dropdown e/ou os campos digitados
         document.querySelectorAll('.proc-select').forEach(select => {
             if (select.value === "Outro") {
                 const manual = select.closest('.td-inner').querySelector('.proc-desc-manual').value.trim();
@@ -482,7 +530,7 @@
         });
         
         let descProcs = listaProcs.length > 0 ? listaProcs.join('<br> • ') : "Conforme descrito na tabela de orçamento";
-        if (listaProcs.length > 0) descProcs = "• " + descProcs; 
+        if (listaProcs.length > 0) descProcs = "• " + descProcs; // bullet point inicial
 
         let textoFinal = `
             <p>Eu, <strong>${nome.toUpperCase()}</strong>, inscrito(a) no CPF sob o nº <strong>${cpf}</strong>, de forma livre e esclarecida, ${termsDB[tipoTermo]}</p>
@@ -497,9 +545,75 @@
         document.getElementById('termo-texto').innerHTML = textoFinal;
     }
 
-    // --- SISTEMA DE ASSINATURA ---
-    const sigCanvasPaciente = document.getElementById('sigCanvasPaciente');
-    const sigCtxPaciente = sigCanvasPaciente.getContext('2d');
+    function avancarDoTermo() {
+        if (!document.getElementById('consent-imagem').checked) {
+            alert("Por favor, confirme a autorização de registro fotográfico antes de prosseguir.");
+            return;
+        }
+        goToStep(4);
+    }
+
+    // --- LÓGICA DO MAPA FACIAL ---
+    const mapCanvas = document.getElementById('mapCanvas');
+    const mapCtx = mapCanvas.getContext('2d');
+    const mapContainer = document.querySelector('.canvas-container');
+
+    function resizeMap() {
+        if(mapContainer.clientWidth > 0) {
+            mapCanvas.width = mapContainer.clientWidth;
+            mapCanvas.height = mapContainer.clientHeight;
+        }
+    }
+    window.addEventListener('resize', resizeMap);
+
+    mapCanvas.addEventListener('click', function(e) {
+        const rect = mapCanvas.getBoundingClientRect();
+        const scaleX = mapCanvas.width / rect.width;
+        const scaleY = mapCanvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        const color = document.getElementById('color-select').value;
+        const dose = prompt("Dose ou Anotação (ex: 2U):");
+        
+        if (dose !== null) {
+            mapCtx.beginPath(); mapCtx.arc(x, y, 6, 0, 2*Math.PI);
+            mapCtx.fillStyle = color; mapCtx.fill();
+            mapCtx.lineWidth = 2; mapCtx.strokeStyle = "#fff"; mapCtx.stroke();
+            if (dose) {
+                mapCtx.font = "bold 15px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+                mapCtx.fillStyle = "#1e293b"; mapCtx.shadowColor = "white"; mapCtx.shadowBlur = 4;
+                mapCtx.fillText(dose, x + 10, y + 5); mapCtx.shadowBlur = 0;
+            }
+        }
+    });
+
+    function clearMap() { if(confirm("Apagar desenho?")) mapCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height); }
+
+    // --- CÂMERA E FOTO ---
+    const cameraInput = document.getElementById('camera-input');
+    const photoDisplay = document.getElementById('photo-display');
+    const patientPhoto = document.getElementById('patient-photo');
+    const btnRemover = document.getElementById('btn-remover-foto');
+
+    cameraInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                patientPhoto.src = event.target.result;
+                photoDisplay.style.display = 'flex';
+                btnRemover.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+    function removerFoto() { patientPhoto.src = ""; photoDisplay.style.display = 'none'; btnRemover.style.display = 'none'; cameraInput.value = ""; }
+
+    // --- SISTEMA DE ASSINATURAS ---
+    const sigCanvasTermo = document.getElementById('sigCanvasTermo');
+    const sigCtxTermo = sigCanvasTermo.getContext('2d');
+    const sigCanvasProntuario = document.getElementById('sigCanvasProntuario');
+    const sigCtxProntuario = sigCanvasProntuario.getContext('2d');
 
     function initSignature(canvas, ctx) {
         const rect = canvas.parentElement.getBoundingClientRect();
@@ -528,8 +642,10 @@
     function clearSig(ctx, canvas) { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     window.addEventListener('resize', () => {
-        if(document.getElementById('step-3').classList.contains('active')) {
-            initSignature(sigCanvasPaciente, sigCtxPaciente);
+        if(document.getElementById('step-3').classList.contains('active')) initSignature(sigCanvasTermo, sigCtxTermo);
+        if(document.getElementById('step-4').classList.contains('active')) {
+            resizeMap();
+            initSignature(sigCanvasProntuario, sigCtxProntuario);
         }
     });
 
@@ -546,7 +662,7 @@
             whatsapp: document.getElementById('client-phone').value.trim(),
             procedimento: procedimentoNome,
             valor_total: totalValor, 
-            data_atendimento: document.getElementById('data_termo').value
+            data_atendimento: document.getElementById('data_prontuario').value
         };
 
         fetch(webhookUrl, {
